@@ -16,4 +16,9 @@
     <color name="toolbar_color_control_normal">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
     <color name="colorLightGray">#EBEBEB</color>
+
+    <color name="rgSolidColour">#ECEDEF</color>
+    <color name="rgStrokeColour">#9AA2AF</color>
+    <color name="rbStateChecked">#FFFFFF</color>
+    <color name="rbStateUnchecked">#ADB3BE</color>
 </resources>
