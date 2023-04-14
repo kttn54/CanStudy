@@ -71,7 +71,6 @@ class SearchActivity : AppCompatActivity() {
                     binding?.rvSearch?.layoutManager = LinearLayoutManager(this@SearchActivity)
 
                     for (word in allWordsList) {
-
                         val newWord = WordModel(
                             word.ID,
                             word.CANTO_WORD,
