@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/yumcha"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:gravity="center"
+        android:text="Welcome to CanStudy"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:gravity="center"
+        android:text="an app that tests your Cantonese"
+        android:textSize="14sp"
+        />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_layout_top"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:layout_marginTop="30dp"
+        android:padding="20dp"
+        >
+
+        <Button
+            android:id="@+id/btn_test"
+            android:layout_width="@dimen/main_button"
+            android:layout_height="wrap_content"
+            android:text="Test"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_study"
+            app:layout_constraintTop_toTopOf="@id/cl_layout_top"
+            app:layout_constraintBottom_toBottomOf="@id/cl_layout_top"
+            />
+
+        <Button
+            android:id="@+id/btn_study"
+            android:layout_width="@dimen/main_button"
+            android:layout_height="wrap_content"
+            android:text="Study"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_test"
+            app:layout_constraintTop_toTopOf="@id/cl_layout_top"
+            app:layout_constraintBottom_toBottomOf="@id/cl_layout_top"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_layout_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="100dp"
+        android:padding="20dp"
+        >
+
+        <Button
+            android:id="@+id/btn_search"
+            android:layout_width="@dimen/main_button"
+            android:layout_height="wrap_content"
+            android:text="Search"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/btn_game"
+            app:layout_constraintTop_toTopOf="@id/cl_layout_bottom"
+            app:layout_constraintBottom_toBottomOf="@id/cl_layout_bottom"
+            />
+
+        <Button
+            android:id="@+id/btn_game"
+            android:layout_width="@dimen/main_button"
+            android:layout_height="wrap_content"
+            android:text="Game"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/btn_search"
+            app:layout_constraintTop_toTopOf="@id/cl_layout_bottom"
+            app:layout_constraintBottom_toBottomOf="@id/cl_layout_bottom"
+            />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
