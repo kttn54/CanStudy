@@ -42,46 +42,54 @@ class SearchActivity : AppCompatActivity() {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                val query = s.toString().lowercase(Locale.getDefault())
+                val query = s.toString()
                 filterWithQuery(query)
             }
 
-            override fun afterTextChanged(s: Editable?) {
-                //filterData(s.toString())
-            }
+            override fun afterTextChanged(s: Editable?) {}
         })
+    }
+
+    private fun filterWithQuery(query: String) {
+        val dao = (application as CanStudyDatabaseApp).db.wordDao()
+        getWordList(dao) { wordList ->
+            val filteredList: ArrayList<WordModel> = ArrayList()
+            for (word in wordList) {
+                if (word.getEnglishWord().lowercase().contains(query.lowercase())) {
+                    filteredList.add(word)
+                }
+            }
+            attachAdapter(filteredList)
+        }
+    }
+
+    private fun getWordList(wordDao: WordDao, callback: (ArrayList<WordModel>) -> Unit) {
+        val wordList = ArrayList<WordModel>()
+        lifecycleScope.launch {
+            wordDao.readAll().collect { allWordsList ->
+                if (allWordsList.isNotEmpty()) {
+                    binding?.rvSearch?.layoutManager = LinearLayoutManager(this@SearchActivity)
+
+                    for (word in allWordsList) {
+
+                        val newWord = WordModel(
+                            word.ID,
+                            word.CANTO_WORD,
+                            word.ENGLISH_WORD,
+                            word.CORRECT_STATUS
+                        )
+                        wordList.add(newWord)
+                    }
+
+                    callback(wordList)
+                }
+            }
+        }
     }
 
     private fun attachAdapter(list: ArrayList<WordModel>) {
         val wordAdapter = WordAdapter(list)
         binding?.rvSearch?.adapter = wordAdapter
-    }
-
-    private fun onQueryChanged(filterQuery: String): ArrayList<WordModel> {
-        val filteredList = ArrayList<WordModel>()
-        val dao = (application as CanStudyDatabaseApp).db.wordDao()
-        val words = getWordList(dao)
-        for (word in words) {
-            println(word)
-            if(word.getEnglishWord().lowercase(Locale.getDefault()).contains(filterQuery)) {
-                filteredList.add(word)
-            }
-        }
-        return filteredList
-    }
-
-    // fix this
-    private fun filterWithQuery(query: String) {
-        if (query.isNotEmpty()) {
-            val filteredList: ArrayList<WordModel> = onQueryChanged(query)
-            println("filter)")
-            attachAdapter(filteredList)
-            toggleRecyclerView(filteredList)
-        } else if (query.isEmpty()) {
-            val dao = (application as CanStudyDatabaseApp).db.wordDao()
-            setupWordRecyclerView(dao)
-            // attachAdapter(wordList)
-        }
     }
 
     private fun toggleRecyclerView(wordList: ArrayList<WordModel>) {
@@ -92,44 +100,6 @@ class SearchActivity : AppCompatActivity() {
             binding?.rvSearch?.visibility = View.VISIBLE
             binding?.tvNoResultsFound?.visibility = View.INVISIBLE
         }
-    }
-
-
-    /* FROM CHAT-GPT: potentially not using
-    private fun filterData(query: String) {
-        val words = getWordList(dao)
-        val filteredList = words.filter { item ->
-            item.contains(query, ignoreCase = true)
-        }
-        wordAdapter.updateData(filteredList)
-    }
-
-    private fun updateData(newDataList: List<ClipData.Item>) {
-        dataList = newDataList
-        notifyDataSetChanged()
-    }
-    */
-
-    private fun getWordList(wordDao: WordDao): ArrayList<WordModel> {
-        val wordList = ArrayList<WordModel>()
-        lifecycleScope.launch {
-            wordDao.readAll().collect { allWordsList ->
-                if (allWordsList.isNotEmpty()) {
-                    binding?.rvSearch?.layoutManager = LinearLayoutManager(this@SearchActivity)
-
-                    for (word in allWordsList) {
-                        val newWord = WordModel(
-                            word.ID,
-                            word.CANTO_WORD,
-                            word.ENGLISH_WORD,
-                            word.CORRECT_STATUS
-                        )
-                        wordList.add(newWord)
-                    }
-                }
-            }
-        }
-        return wordList
     }
 
     private fun setupWordRecyclerView(wordDao: WordDao) {

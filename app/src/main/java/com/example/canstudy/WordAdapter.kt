@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.canstudy.databinding.ItemWordRowBinding
 
-class WordAdapter(private val items: ArrayList<WordModel>): RecyclerView.Adapter<WordAdapter.ViewHolder>() {
+class WordAdapter(private var wordList: ArrayList<WordModel>): RecyclerView.Adapter<WordAdapter.ViewHolder>() {
 
     class ViewHolder(binding: ItemWordRowBinding) : RecyclerView.ViewHolder(binding.root) {
         val llWordItemMain = binding.llWordItemMain
@@ -26,7 +26,7 @@ class WordAdapter(private val items: ArrayList<WordModel>): RecyclerView.Adapter
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val model: WordModel = items[position]
+        val model: WordModel = wordList[position]
         holder.tvEnglishWord.text = model.getEnglishWord()
         holder.tvCantoneseWord.text = model.getCantoneseWord()
 
@@ -48,6 +48,6 @@ class WordAdapter(private val items: ArrayList<WordModel>): RecyclerView.Adapter
     }
 
     override fun getItemCount(): Int {
-        return items.size
+        return wordList.size
     }
 }
