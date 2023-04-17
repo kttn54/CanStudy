@@ -31,6 +31,8 @@ class SearchActivity : AppCompatActivity() {
     private var noSearchResults: TextView? = null
     private var languageSelected: String? = null
     private var btnAdd: Button? = null
+    private lateinit var mWordModel: WordModel
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,6 +69,9 @@ class SearchActivity : AppCompatActivity() {
         window?.attributes = layoutParams
 
         dialogBinding.btnYes.setOnClickListener {
+            val cantoneseWord = dialogBinding.etAddCantoneseWord.text.toString()
+            val englishWord = dialogBinding.etAddEnglishWord.text.toString()
+            val newWord = WordModel(0, cantoneseWord, englishWord, true)
             wordDialog.dismiss()
         }
         dialogBinding.btnNo.setOnClickListener {
@@ -75,7 +80,6 @@ class SearchActivity : AppCompatActivity() {
 
         wordDialog.show()
     }
-
 
     private fun setupRadioGroupListener() {
         binding?.rgLanguage?.setOnCheckedChangeListener { _, checkedId: Int ->
@@ -91,11 +95,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupWordRecyclerView(wordDao: WordDao) {
+        val words = ArrayList<WordModel>()
         lifecycleScope.launch {
             wordDao.readAll().collect { allWordsList ->
                 if (allWordsList.isNotEmpty()) {
                     binding?.rvSearch?.layoutManager = LinearLayoutManager(this@SearchActivity)
-                    val words = ArrayList<WordModel>()
+                    addToWordArray(allWordsList)
                     for (word in allWordsList) {
                         val newWord = WordModel(
                             word.ID,
@@ -108,6 +113,18 @@ class SearchActivity : AppCompatActivity() {
                     attachAdapter(words)
                 }
             }
+        }
+    }
+
+    private fun addToWordArray(allWordsList: List<WordEntity>) {
+        for (word in allWordsList) {
+            val newWord = WordModel(
+                word.ID,
+                word.CANTO_WORD,
+                word.ENGLISH_WORD,
+                word.CORRECT_STATUS
+            )
+            words.add(newWord)
         }
     }
 
@@ -173,7 +190,6 @@ class SearchActivity : AppCompatActivity() {
                         )
                         wordList.add(newWord)
                     }
-
                     callback(wordList)
                 }
             }

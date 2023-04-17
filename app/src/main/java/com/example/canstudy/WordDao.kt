@@ -8,11 +8,8 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface WordDao {
 
-    /*
     @Insert
-    // TODO
-    suspend fun insert()
-     */
+    suspend fun addWord(word: WordModel)
 
     @Query("SELECT * FROM `CantoWords`")
     // TODO
