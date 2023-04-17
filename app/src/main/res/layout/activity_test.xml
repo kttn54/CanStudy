@@ -6,14 +6,34 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".TestActivity">
-    
-    <Button
-        android:id="@+id/btnReview"
-        android:layout_margin="10dp"
-        android:layout_width="wrap_content"
+
+    <LinearLayout
+        android:id="@+id/llTopButtons"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="REVIEW"
-        />
+        android:orientation="horizontal"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnReview"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REVIEW"
+            android:layout_weight="1"
+            />
+
+        <Button
+            android:id="@+id/btnRestart"
+            android:layout_margin="10dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RESTART"
+            android:layout_weight="1"
+            />
+
+    </LinearLayout>
+
     
     <TextView
         android:id="@+id/tvScore"
@@ -87,11 +107,11 @@
         android:id="@+id/tvCantoneseDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:textSize="20sp"
-        android:text="Cantonese:" />
+        android:text="Cantonese:"
+        android:textSize="20sp" />
 
     <TextView
         android:id="@+id/tvCantoneseTranslation"
