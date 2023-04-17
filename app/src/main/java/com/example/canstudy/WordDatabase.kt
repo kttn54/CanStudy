@@ -40,7 +40,7 @@ abstract class WordDatabase: RoomDatabase() {
                         WordDatabase::class.java,
                         "word_database"
                     ).fallbackToDestructiveMigration()
-                        .createFromAsset("database/CantoWords.db").build()
+                        .createFromAsset("database/CantoWords_shortened.db").build()
                     //fallbacktoDestructiveMigration ensures that the database is wiped and rebuilt
                     //if no migration object exists
 

@@ -21,7 +21,7 @@
             android:name=".SearchActivity"
             android:exported="false" />
         <activity
-            android:name=".StudyActivity"
+            android:name=".ReviewActivity"
             android:exported="false" />
         <activity
             android:name=".TestActivity"

@@ -1,19 +1,24 @@
 package com.example.canstudy
 
+import android.app.Dialog
 import android.content.ClipData
 import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.UserDictionary.Words.addWord
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.View
+import android.view.WindowManager
+import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.canstudy.databinding.ActivitySearchBinding
+import com.example.canstudy.databinding.DialogAddWordBinding
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import java.util.*
@@ -25,6 +30,7 @@ class SearchActivity : AppCompatActivity() {
     private var searchBar: EditText? = null
     private var noSearchResults: TextView? = null
     private var languageSelected: String? = null
+    private var btnAdd: Button? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -35,12 +41,41 @@ class SearchActivity : AppCompatActivity() {
 
         noSearchResults = binding?.tvNoResultsFound
         searchBar = binding?.etSearchBar
+        btnAdd = binding?.btnAddWord
         languageSelected = "English"
 
         setupRadioGroupListener()
         setupWordRecyclerView(dao)
         setupEnglishSearchListener()
+
+        btnAdd?.setOnClickListener {
+            addWordDialog()
+        }
     }
+
+    private fun addWordDialog() {
+        val wordDialog = Dialog(this)
+        val dialogBinding = DialogAddWordBinding.inflate(layoutInflater)
+        wordDialog.setContentView(dialogBinding.root)
+        wordDialog.setCanceledOnTouchOutside(true)
+
+        // Make dialog match the width of the screen
+        val window = wordDialog.window
+        val layoutParams = window?.attributes
+        layoutParams?.width = WindowManager.LayoutParams.MATCH_PARENT
+        layoutParams?.height = WindowManager.LayoutParams.WRAP_CONTENT
+        window?.attributes = layoutParams
+
+        dialogBinding.btnYes.setOnClickListener {
+            wordDialog.dismiss()
+        }
+        dialogBinding.btnNo.setOnClickListener {
+            wordDialog.dismiss()
+        }
+
+        wordDialog.show()
+    }
+
 
     private fun setupRadioGroupListener() {
         binding?.rgLanguage?.setOnCheckedChangeListener { _, checkedId: Int ->

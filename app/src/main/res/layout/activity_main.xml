@@ -56,7 +56,7 @@
             android:id="@+id/btn_study"
             android:layout_width="@dimen/main_button"
             android:layout_height="wrap_content"
-            android:text="Study"
+            android:text="REVIEW"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_test"
             app:layout_constraintTop_toTopOf="@id/cl_layout_top"
