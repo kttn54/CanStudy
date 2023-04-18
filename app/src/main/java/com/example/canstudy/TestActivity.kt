@@ -34,11 +34,13 @@ class TestActivity : AppCompatActivity() {
     private lateinit var tvCantoneseTranslation: TextView
     private lateinit var tvEnglishDescription: TextView
     private lateinit var tvEnglishTranslation: TextView
+    private lateinit var tvWordID: TextView
     private lateinit var tvLeftScore: TextView
     private lateinit var tvRightScore: TextView
     private var correctScore = 0
     private var totalScore = 0
-    private var wordsChosen = ArrayList<Int>()
+    private var repeatedWords = ArrayList<Int>()
+    private var wrongWordList = ArrayList<Int>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,7 +49,7 @@ class TestActivity : AppCompatActivity() {
 
         initialiseActivity()
 
-        val dao = (application as CanStudyDatabaseApp).db.wordDao()
+        val dao = (application as CanStudyApp).db.wordDao()
 
         ibTick.setOnClickListener { calculateCorrectAnswer() }
         ibCross.setOnClickListener { calculateWrongAnswer() }
@@ -70,6 +72,12 @@ class TestActivity : AppCompatActivity() {
         tvRightScore.text = totalScore.toString()
         tvCantoneseDescription.visibility = INVISIBLE
         tvCantoneseTranslation.visibility = INVISIBLE
+
+        val tvWrongWordID = tvWordID.text.toString()
+        val IDNumber = tvWrongWordID.toInt()
+        wrongWordList.add(IDNumber)
+        Log.e("what", "$IDNumber")
+
         getWord()
     }
 
@@ -93,6 +101,7 @@ class TestActivity : AppCompatActivity() {
         tvCantoneseTranslation = binding.tvCantoneseTranslation
         tvEnglishDescription = binding.tvEnglishDescription
         tvEnglishTranslation = binding.tvEnglishTranslation
+        tvWordID = binding.tvWordID
         tvLeftScore = binding.tvLeftScore
         tvRightScore = binding.tvRightScore
 
@@ -103,10 +112,10 @@ class TestActivity : AppCompatActivity() {
     }
 
     private fun getWord() {
-        val dao = (application as CanStudyDatabaseApp).db.wordDao()
+        val dao = (application as CanStudyApp).db.wordDao()
         getWordList(dao) { wordList ->
             // Handle the case where all words have been chosen
-            if (wordsChosen.size == wordList.size) {
+            if (repeatedWords.size == wordList.size) {
                 addRestartReviewDialog()
                 disableElements()
                 tvCantoneseDescription.visibility = VISIBLE
@@ -117,11 +126,12 @@ class TestActivity : AppCompatActivity() {
             var randomValue: Int
             do {
                 randomValue = Random.nextInt(0, wordList.size)
-            } while (wordsChosen.contains(randomValue))
+            } while (repeatedWords.contains(randomValue))
 
             tvEnglishTranslation.text = wordList[randomValue].getEnglishWord()
-            tvCantoneseTranslation.text = wordList[randomValue].getCantoneseWord()
-            wordsChosen.add(randomValue)
+            tvCantoneseTranslation.text = wordList[randomValue].getCantoWord()
+            tvWordID.text = wordList[randomValue].getId().toString()
+            repeatedWords.add(randomValue)
         }
     }
 
@@ -142,7 +152,7 @@ class TestActivity : AppCompatActivity() {
         totalScore = 0
         tvLeftScore.text = correctScore.toString()
         tvRightScore.text = totalScore.toString()
-        wordsChosen.clear()
+        repeatedWords.clear()
         enableElements()
         getWord()
         tvCantoneseDescription.visibility = INVISIBLE
@@ -173,13 +183,13 @@ class TestActivity : AppCompatActivity() {
         restartReviewDialog.show()
     }
 
-    private fun getWordList(wordDao: WordDao, callback: (ArrayList<WordModel>) -> Unit) {
-        val wordList = ArrayList<WordModel>()
+    private fun getWordList(wordDao: WordDao, callback: (ArrayList<WordEntity>) -> Unit) {
+        val wordList = ArrayList<WordEntity>()
         lifecycleScope.launch {
             wordDao.readAll().collect { allWordsList ->
                 if (allWordsList.isNotEmpty()) {
                     for (word in allWordsList) {
-                        val newWord = WordModel(
+                        val newWord = WordEntity(
                             word.ID,
                             word.CANTO_WORD,
                             word.ENGLISH_WORD,

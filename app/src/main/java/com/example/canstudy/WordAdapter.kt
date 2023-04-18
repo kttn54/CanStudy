@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.canstudy.databinding.ItemWordRowBinding
 
-class WordAdapter(private var wordList: ArrayList<WordModel>): RecyclerView.Adapter<WordAdapter.ViewHolder>() {
+class WordAdapter(private var wordList: ArrayList<WordEntity>): RecyclerView.Adapter<WordAdapter.ViewHolder>() {
 
     class ViewHolder(binding: ItemWordRowBinding) : RecyclerView.ViewHolder(binding.root) {
         val llWordItemMain = binding.llWordItemMain
@@ -26,9 +26,9 @@ class WordAdapter(private var wordList: ArrayList<WordModel>): RecyclerView.Adap
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val model: WordModel = wordList[position]
+        val model: WordEntity = wordList[position]
         holder.tvEnglishWord.text = model.getEnglishWord()
-        holder.tvCantoneseWord.text = model.getCantoneseWord()
+        holder.tvCantoneseWord.text = model.getCantoWord()
 
         if (position % 2 == 0) {
             holder.llWordItemMain.setBackgroundColor(

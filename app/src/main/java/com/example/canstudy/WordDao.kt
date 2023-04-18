@@ -1,19 +1,25 @@
 package com.example.canstudy
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.Query
+import androidx.room.*
 import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface WordDao {
 
     @Insert
-    suspend fun addWord(word: WordModel)
+    suspend fun addWord(wordEntity: WordEntity)
+
+    @Update
+    suspend fun update(wordEntity: WordEntity)
+
+    @Delete
+    suspend fun delete(wordEntity: WordEntity)
 
     @Query("SELECT * FROM `CantoWords`")
-    // TODO
     fun readAll(): Flow<List<WordEntity>>
+
+    @Query("SELECT * FROM `CantoWords` where id=:id")
+    fun readWordById(id:Int):Flow<WordEntity>
 
     /*
     fun readAll(): Flow<List<WordEntity>> declares the function itself.

@@ -14,13 +14,16 @@ import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.canstudy.databinding.ActivitySearchBinding
 import com.example.canstudy.databinding.DialogAddWordBinding
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -31,7 +34,6 @@ class SearchActivity : AppCompatActivity() {
     private var noSearchResults: TextView? = null
     private var languageSelected: String? = null
     private var btnAdd: Button? = null
-    private lateinit var mWordModel: WordModel
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,23 +41,25 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        val dao = (application as CanStudyDatabaseApp).db.wordDao()
+        val dao = (application as CanStudyApp).db.wordDao()
 
         noSearchResults = binding?.tvNoResultsFound
         searchBar = binding?.etSearchBar
         btnAdd = binding?.btnAddWord
         languageSelected = "English"
 
+        searchBar?.requestFocus()
+
         setupRadioGroupListener()
         setupWordRecyclerView(dao)
         setupEnglishSearchListener()
 
         btnAdd?.setOnClickListener {
-            addWordDialog()
+            addWordDialog(dao)
         }
     }
 
-    private fun addWordDialog() {
+    private fun addWordDialog(wordDao: WordDao) {
         val wordDialog = Dialog(this)
         val dialogBinding = DialogAddWordBinding.inflate(layoutInflater)
         wordDialog.setContentView(dialogBinding.root)
@@ -71,8 +75,26 @@ class SearchActivity : AppCompatActivity() {
         dialogBinding.btnYes.setOnClickListener {
             val cantoneseWord = dialogBinding.etAddCantoneseWord.text.toString()
             val englishWord = dialogBinding.etAddEnglishWord.text.toString()
-            val newWord = WordModel(0, cantoneseWord, englishWord, true)
-            wordDialog.dismiss()
+            when {
+                dialogBinding.etAddCantoneseWord.text.isNullOrEmpty() -> {
+                    Toast.makeText(this, "Please enter a Cantonese word/phrase", Toast.LENGTH_SHORT).show()
+                }
+                dialogBinding.etAddEnglishWord.text.isNullOrEmpty() -> {
+                    Toast.makeText(this, "Please enter a English word/phrase", Toast.LENGTH_SHORT).show()
+                } else -> {
+                    val newWord = WordEntity(0, cantoneseWord, englishWord, true)
+                    lifecycleScope.launch {
+                        // withContext(Dispatchers.IO) suspends the coroutine and switches the execution to a background thread pool provided by the 'Dispatchesr.IO' dispatcher.
+                        // This avoids blocking the main thread which could cause the UI to freeze or become unresponsive.
+                        withContext(Dispatchers.IO) {
+                            wordDao.addWord(newWord)
+                            setupWordRecyclerView(wordDao)
+                        }
+                    }
+                    Toast.makeText(this@SearchActivity, "Successfully added", Toast.LENGTH_SHORT).show()
+                    wordDialog.dismiss()
+                }
+            }
         }
         dialogBinding.btnNo.setOnClickListener {
             wordDialog.dismiss()
@@ -95,36 +117,23 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupWordRecyclerView(wordDao: WordDao) {
-        val words = ArrayList<WordModel>()
+        val wordList = ArrayList<WordEntity>()
         lifecycleScope.launch {
             wordDao.readAll().collect { allWordsList ->
                 if (allWordsList.isNotEmpty()) {
                     binding?.rvSearch?.layoutManager = LinearLayoutManager(this@SearchActivity)
-                    addToWordArray(allWordsList)
                     for (word in allWordsList) {
-                        val newWord = WordModel(
+                        val newWord = WordEntity(
                             word.ID,
                             word.CANTO_WORD,
                             word.ENGLISH_WORD,
                             word.CORRECT_STATUS
                         )
-                        words.add(newWord)
+                        wordList.add(newWord)
                     }
-                    attachAdapter(words)
+                    attachAdapter(wordList)
                 }
             }
-        }
-    }
-
-    private fun addToWordArray(allWordsList: List<WordEntity>) {
-        for (word in allWordsList) {
-            val newWord = WordModel(
-                word.ID,
-                word.CANTO_WORD,
-                word.ENGLISH_WORD,
-                word.CORRECT_STATUS
-            )
-            words.add(newWord)
         }
     }
 
@@ -155,16 +164,16 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun filterWithQuery(query: String) {
-        val dao = (application as CanStudyDatabaseApp).db.wordDao()
+        val dao = (application as CanStudyApp).db.wordDao()
         getWordList(dao) { wordList ->
-            val filteredList: ArrayList<WordModel> = ArrayList()
+            val filteredList: ArrayList<WordEntity> = ArrayList()
             for (word in wordList) {
                 if (languageSelected.equals("English")) {
                     if (word.getEnglishWord().lowercase().contains(query.lowercase())) {
                         filteredList.add(word)
                     }
                 } else {
-                    if (word.getCantoneseWord().lowercase().contains(query.lowercase())) {
+                    if (word.getCantoWord().lowercase().contains(query.lowercase())) {
                         filteredList.add(word)
                     }
                 }
@@ -174,15 +183,14 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun getWordList(wordDao: WordDao, callback: (ArrayList<WordModel>) -> Unit) {
-        val wordList = ArrayList<WordModel>()
+    private fun getWordList(wordDao: WordDao, callback: (ArrayList<WordEntity>) -> Unit) {
         lifecycleScope.launch {
             wordDao.readAll().collect { allWordsList ->
                 if (allWordsList.isNotEmpty()) {
+                    val wordList = ArrayList<WordEntity>()
                     binding?.rvSearch?.layoutManager = LinearLayoutManager(this@SearchActivity)
-
                     for (word in allWordsList) {
-                        val newWord = WordModel(
+                        val newWord = WordEntity(
                             word.ID,
                             word.CANTO_WORD,
                             word.ENGLISH_WORD,
@@ -196,12 +204,12 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun attachAdapter(list: ArrayList<WordModel>) {
+    private fun attachAdapter(list: ArrayList<WordEntity>) {
         val wordAdapter = WordAdapter(list)
         binding?.rvSearch?.adapter = wordAdapter
     }
 
-    private fun toggleRecyclerView(wordList: ArrayList<WordModel>) {
+    private fun toggleRecyclerView(wordList: ArrayList<WordEntity>) {
         if (wordList.isEmpty()) {
             binding?.rvSearch?.visibility = View.INVISIBLE
             binding?.tvNoResultsFound?.visibility = View.VISIBLE
@@ -214,5 +222,6 @@ class SearchActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         binding = null
+
     }
 }

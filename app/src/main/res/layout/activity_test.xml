@@ -163,6 +163,18 @@
         android:text="Check"
         />
 
+    <TextView
+        android:id="@+id/tvWordID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:visibility="invisible"
+        android:textColor="@color/black"
+        android:textSize="23sp"
+        tools:text="12"/>
+
 
 
     
