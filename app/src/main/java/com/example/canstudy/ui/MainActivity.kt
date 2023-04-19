@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding?.btnStudy?.setOnClickListener {
-            val intent = Intent(this@MainActivity, ReviewActivity::class.java)
+            val intent = Intent(this@MainActivity, TestActivity::class.java)
             startActivity(intent)
         }
 

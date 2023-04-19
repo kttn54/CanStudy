@@ -1,10 +1,12 @@
 package com.example.canstudy.db.adapter
 
 import android.graphics.Typeface
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.canstudy.R
 import com.example.canstudy.databinding.ItemWordRowBinding
@@ -72,4 +74,42 @@ class ReviewAdapter(private var wordList: ArrayList<WordEntity>, private var tog
     override fun getItemCount(): Int {
         return wordList.size
     }
+
+    fun deleteItem(position: Int) {
+        if (position >= 0 && position < wordList.size) {
+            Log.e("asdf", "ReviewAdapter position is $position, word removed is ${wordList[position]}")
+            wordList.removeAt(position)
+            notifyItemRemoved(position)
+        }
+    }
 }
+
+/*
+open class SwipeToDeleteCallback(private val adapter: ReviewAdapter) : ItemTouchHelper.Callback() {
+
+    // This function defines the swipe and drag behaviour of an item in a RecyclerView.
+    // DragFlag of 0 means the item is not draggable.
+    override fun getMovementFlags(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder
+    ): Int {
+        return makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+    }
+
+    // This function does nothing as we only want the swipe functionality.
+    override fun onMove(
+        recyclerView: RecyclerView,
+        viewHolder: RecyclerView.ViewHolder,
+        target: RecyclerView.ViewHolder
+    ): Boolean {
+        return false
+    }
+
+    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+        val position = viewHolder.adapterPosition
+        adapter.deleteItem(position)
+    }
+
+}
+
+ */
