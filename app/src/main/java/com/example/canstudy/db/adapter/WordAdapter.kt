@@ -1,11 +1,13 @@
-package com.example.canstudy
+package com.example.canstudy.db.adapter
 
-import android.text.Layout
 import android.view.LayoutInflater
+import android.view.View.INVISIBLE
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.example.canstudy.R
 import com.example.canstudy.databinding.ItemWordRowBinding
+import com.example.canstudy.db.entity.WordEntity
 
 class WordAdapter(private var wordList: ArrayList<WordEntity>): RecyclerView.Adapter<WordAdapter.ViewHolder>() {
 

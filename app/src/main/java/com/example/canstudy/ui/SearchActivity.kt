@@ -1,39 +1,37 @@
-package com.example.canstudy
+package com.example.canstudy.ui
 
 import android.app.Dialog
-import android.content.ClipData
-import android.content.ContentValues.TAG
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.provider.UserDictionary.Words.addWord
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
-import androidx.appcompat.widget.AppCompatEditText
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.canstudy.CanStudyApp
+import com.example.canstudy.db.adapter.WordAdapter
 import com.example.canstudy.databinding.ActivitySearchBinding
 import com.example.canstudy.databinding.DialogAddWordBinding
+import com.example.canstudy.db.dao.WordDao
+import com.example.canstudy.db.entity.WordEntity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import java.util.*
 import kotlin.collections.ArrayList
 
 class SearchActivity : AppCompatActivity() {
 
-    private var binding: ActivitySearchBinding? = null
-    private var searchBar: EditText? = null
-    private var noSearchResults: TextView? = null
-    private var languageSelected: String? = null
-    private var btnAdd: Button? = null
+    private lateinit var binding: ActivitySearchBinding
+    private lateinit var searchBar: EditText
+    private lateinit var noSearchResults: TextView
+    private lateinit var languageSelected: String
+    private lateinit var btnAdd: Button
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,20 +39,27 @@ class SearchActivity : AppCompatActivity() {
         binding = ActivitySearchBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
+        setSupportActionBar(binding?.toolbarSearchActivity)
+        if (supportActionBar != null) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.title = "Search word/phrase"
+        }
+        binding?.toolbarSearchActivity?.setNavigationOnClickListener { onBackPressed() }
+
         val dao = (application as CanStudyApp).db.wordDao()
 
-        noSearchResults = binding?.tvNoResultsFound
-        searchBar = binding?.etSearchBar
-        btnAdd = binding?.btnAddWord
+        noSearchResults = binding.tvNoResultsFound
+        searchBar = binding.etSearchBar
+        btnAdd = binding.btnAddWord
         languageSelected = "English"
 
-        searchBar?.requestFocus()
+        searchBar.requestFocus()
 
         setupRadioGroupListener()
         setupWordRecyclerView(dao)
         setupEnglishSearchListener()
 
-        btnAdd?.setOnClickListener {
+        btnAdd.setOnClickListener {
             addWordDialog(dao)
         }
     }
@@ -104,12 +109,12 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupRadioGroupListener() {
-        binding?.rgLanguage?.setOnCheckedChangeListener { _, checkedId: Int ->
-            if (checkedId == binding?.rbEnglish?.id) {
-                binding?.etSearchBar?.setText("")
+        binding.rgLanguage.setOnCheckedChangeListener { _, checkedId: Int ->
+            if (checkedId == binding.rbEnglish.id) {
+                binding.etSearchBar.setText("")
                 setupEnglishSearchListener()
             } else {
-                binding?.etSearchBar?.setText("")
+                binding.etSearchBar.setText("")
                 languageSelected = "Cantonese"
                 setupCantoneseSearchListener()
             }
@@ -121,7 +126,7 @@ class SearchActivity : AppCompatActivity() {
         lifecycleScope.launch {
             wordDao.readAll().collect { allWordsList ->
                 if (allWordsList.isNotEmpty()) {
-                    binding?.rvSearch?.layoutManager = LinearLayoutManager(this@SearchActivity)
+                    binding.rvSearch.layoutManager = LinearLayoutManager(this@SearchActivity)
                     for (word in allWordsList) {
                         val newWord = WordEntity(
                             word.ID,
@@ -138,7 +143,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupEnglishSearchListener() {
-        searchBar?.addTextChangedListener(object: TextWatcher {
+        searchBar.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -151,7 +156,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
     private fun setupCantoneseSearchListener() {
-        searchBar?.addTextChangedListener(object: TextWatcher {
+        searchBar.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -188,7 +193,7 @@ class SearchActivity : AppCompatActivity() {
             wordDao.readAll().collect { allWordsList ->
                 if (allWordsList.isNotEmpty()) {
                     val wordList = ArrayList<WordEntity>()
-                    binding?.rvSearch?.layoutManager = LinearLayoutManager(this@SearchActivity)
+                    binding.rvSearch.layoutManager = LinearLayoutManager(this@SearchActivity)
                     for (word in allWordsList) {
                         val newWord = WordEntity(
                             word.ID,
@@ -206,22 +211,21 @@ class SearchActivity : AppCompatActivity() {
 
     private fun attachAdapter(list: ArrayList<WordEntity>) {
         val wordAdapter = WordAdapter(list)
-        binding?.rvSearch?.adapter = wordAdapter
+        binding.rvSearch.adapter = wordAdapter
     }
 
     private fun toggleRecyclerView(wordList: ArrayList<WordEntity>) {
         if (wordList.isEmpty()) {
-            binding?.rvSearch?.visibility = View.INVISIBLE
-            binding?.tvNoResultsFound?.visibility = View.VISIBLE
+            binding.rvSearch.visibility = View.INVISIBLE
+            binding.tvNoResultsFound.visibility = View.VISIBLE
         } else {
-            binding?.rvSearch?.visibility = View.VISIBLE
-            binding?.tvNoResultsFound?.visibility = View.INVISIBLE
+            binding.rvSearch.visibility = View.VISIBLE
+            binding.tvNoResultsFound.visibility = View.INVISIBLE
         }
     }
 
     override fun onDestroy() {
         super.onDestroy()
-        binding = null
-
+        (application as CanStudyApp).db.close()
     }
 }

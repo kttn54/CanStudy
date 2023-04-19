@@ -1,6 +1,7 @@
-package com.example.canstudy
+package com.example.canstudy.db.dao
 
 import androidx.room.*
+import com.example.canstudy.db.entity.WordEntity
 import kotlinx.coroutines.flow.Flow
 
 @Dao

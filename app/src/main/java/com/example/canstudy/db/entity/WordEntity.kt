@@ -1,4 +1,4 @@
-package com.example.canstudy
+package com.example.canstudy.db.entity
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

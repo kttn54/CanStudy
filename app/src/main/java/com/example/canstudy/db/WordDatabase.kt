@@ -1,19 +1,27 @@
-package com.example.canstudy
+package com.example.canstudy.db
 
 import android.content.Context
-import android.graphics.Typeface.createFromAsset
-import android.widget.Toast
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.withContext
+import androidx.room.migration.Migration
+import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.canstudy.db.dao.WordDao
+import com.example.canstudy.db.entity.WordEntity
 
-@Database(entities = [WordEntity::class], version = 1)
+@Database(entities = [WordEntity::class], version = 1, exportSchema = true)
 abstract class WordDatabase: RoomDatabase() {
-    abstract fun wordDao():WordDao
+    abstract fun wordDao(): WordDao
 
     companion object {
+
+        val migration1to2 = object : Migration(1, 2) {
+            override fun migrate(database: SupportSQLiteDatabase) {
+                // Define how to migrate the database from version 1 to version 2
+                // For example, you can add a new column or modify an existing column
+                database.execSQL("ALTER TABLE WordEntity ADD COLUMN new_column_name TEXT")
+            }
+        }
 
         // this will keep a reference to any database returned via getInstance.
         // this will help avoid repeatedly initialising the database which is performance heavy
@@ -45,11 +53,10 @@ abstract class WordDatabase: RoomDatabase() {
 
                 if (instance == null) {
                     instance = Room.databaseBuilder(
-                        context.applicationContext,
+                        context,
                         WordDatabase::class.java,
                         "CantoWords"
-                    ).fallbackToDestructiveMigration()
-                        .createFromAsset("database/CantoWords_shortened.db").build()
+                    ).createFromAsset("database/CantoWords.db").build()
                     INSTANCE = instance
                 }
                 return instance

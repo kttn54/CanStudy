@@ -4,27 +4,21 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".SearchActivity">
+    tools:context=".ui.SearchActivity">
 
-    <TextView
-        android:id="@+id/tv_search_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarSearchActivity"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_margin="20dp"
-        android:text="Word Collection"
-        android:textStyle="bold"
-        android:textSize="30dp"
-        android:gravity="center"
-        />
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/white" />
+
 
     <RadioGroup
         android:id="@+id/rgLanguage"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/tv_search_title"
+        app:layout_constraintTop_toBottomOf="@id/toolbarSearchActivity"
         app:layout_constraintStart_toStartOf="parent"
         android:layout_margin="15dp"
         android:background="@drawable/radio_group_tab_background"
@@ -115,7 +109,7 @@
     </LinearLayout>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_search"
+        android:id="@+id/rvSearch"
         app:layout_constraintTop_toBottomOf="@id/llSearchandAdd"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

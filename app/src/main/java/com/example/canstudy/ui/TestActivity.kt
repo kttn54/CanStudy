@@ -1,25 +1,23 @@
-package com.example.canstudy
+package com.example.canstudy.ui
 
 import android.app.Dialog
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
+import com.example.canstudy.CanStudyApp
 import com.example.canstudy.databinding.ActivityTestBinding
 import com.example.canstudy.databinding.DialogRestartReviewBinding
-import kotlinx.coroutines.Dispatchers
+import com.example.canstudy.db.dao.WordDao
+import com.example.canstudy.db.entity.WordEntity
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.lang.reflect.Array
 import kotlin.random.Random
 
 class TestActivity : AppCompatActivity() {
@@ -46,6 +44,13 @@ class TestActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityTestBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        setSupportActionBar(binding?.toolbarTestActivity)
+        if (supportActionBar != null) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.title = "Test"
+        }
+        binding?.toolbarTestActivity?.setNavigationOnClickListener { onBackPressed() }
 
         initialiseActivity()
 
@@ -76,7 +81,6 @@ class TestActivity : AppCompatActivity() {
         val tvWrongWordID = tvWordID.text.toString()
         val IDNumber = tvWrongWordID.toInt()
         wrongWordList.add(IDNumber)
-        Log.e("what", "$IDNumber")
 
         getWord()
     }
@@ -177,7 +181,9 @@ class TestActivity : AppCompatActivity() {
             restartScore()
         }
         dialogBinding.btnReview.setOnClickListener {
-
+            val intent = Intent(this, ReviewActivity::class.java)
+            intent.putIntegerArrayListExtra("key", wrongWordList)
+            startActivity(intent)
         }
 
         restartReviewDialog.show()
@@ -203,4 +209,8 @@ class TestActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        (application as CanStudyApp).db.close()
+    }
 }

@@ -5,7 +5,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".TestActivity">
+    tools:context=".ui.TestActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarTestActivity"
+        android:layout_width="match_parent"
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/white" />
 
     <LinearLayout
         android:id="@+id/llTopButtons"
