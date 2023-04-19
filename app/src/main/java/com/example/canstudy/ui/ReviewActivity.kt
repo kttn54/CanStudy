@@ -3,6 +3,8 @@ package com.example.canstudy.ui
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.View.VISIBLE
+import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.canstudy.CanStudyApp
@@ -16,27 +18,39 @@ import kotlinx.coroutines.launch
 class ReviewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityReviewBinding
+    private lateinit var tvNoWrongWordsFound: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityReviewBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        setSupportActionBar(binding?.toolbarReviewActivity)
-        if (supportActionBar != null) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.title = "Review"
-        }
-        binding?.toolbarReviewActivity?.setNavigationOnClickListener { onBackPressed() }
+        initialiseActivity()
 
         val intent = intent
         val wrongWordList = intent.getIntegerArrayListExtra("key")
         val dao = (application as CanStudyApp).db.wordDao()
 
-        setupWordRecyclerView(dao)
+        if (wrongWordList != null) {
+            setupWordRecyclerView(dao, wrongWordList)
+        } else {
+            tvNoWrongWordsFound.visibility = VISIBLE
+        }
     }
 
-    private fun setupWordRecyclerView(wordDao: WordDao) {
+    private fun initialiseActivity() {
+        setSupportActionBar(binding.toolbarReviewActivity)
+        if (supportActionBar != null) {
+            supportActionBar?.setDisplayHomeAsUpEnabled(true)
+            supportActionBar?.title = "Review"
+        }
+
+        tvNoWrongWordsFound = binding.tvNoWrongWordsFound
+
+        binding?.toolbarReviewActivity?.setNavigationOnClickListener { onBackPressed() }
+    }
+
+    private fun setupWordRecyclerView(wordDao: WordDao, wrongWordList: ArrayList<Int>) {
         val wordList = ArrayList<WordEntity>()
         lifecycleScope.launch {
             wordDao.readAll().collect { allWordsList ->

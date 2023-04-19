@@ -45,6 +45,16 @@ class TestActivity : AppCompatActivity() {
         binding = ActivityTestBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initialiseActivity()
+
+        ibTick.setOnClickListener { calculateCorrectAnswer() }
+        ibCross.setOnClickListener { calculateWrongAnswer() }
+        btnCheck.setOnClickListener { displayCantoneseText() }
+        btnRestart.setOnClickListener { restartScore() }
+        btnReview.setOnClickListener { goToReviewActivity() }
+    }
+
+    private fun initialiseActivity() {
         setSupportActionBar(binding?.toolbarTestActivity)
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -52,14 +62,23 @@ class TestActivity : AppCompatActivity() {
         }
         binding?.toolbarTestActivity?.setNavigationOnClickListener { onBackPressed() }
 
-        initialiseActivity()
+        ibTick = binding.ibTick
+        ibCross = binding.ibCross
+        btnCheck = binding.btnCheck
+        btnReview = binding.btnReview
+        btnRestart = binding.btnRestart
+        tvCantoneseDescription = binding.tvCantoneseDescription
+        tvCantoneseTranslation = binding.tvCantoneseTranslation
+        tvEnglishDescription = binding.tvEnglishDescription
+        tvEnglishTranslation = binding.tvEnglishTranslation
+        tvWordID = binding.tvWordID
+        tvLeftScore = binding.tvLeftScore
+        tvRightScore = binding.tvRightScore
 
-        val dao = (application as CanStudyApp).db.wordDao()
+        tvCantoneseTranslation.visibility = INVISIBLE
+        tvCantoneseDescription.visibility = INVISIBLE
 
-        ibTick.setOnClickListener { calculateCorrectAnswer() }
-        ibCross.setOnClickListener { calculateWrongAnswer() }
-        btnCheck.setOnClickListener { displayCantoneseText() }
-        btnRestart.setOnClickListener { restartScore() }
+        getWord()
     }
 
     private fun calculateCorrectAnswer() {
@@ -95,24 +114,10 @@ class TestActivity : AppCompatActivity() {
         }
     }
 
-    private fun initialiseActivity() {
-        ibTick = binding.ibTick
-        ibCross = binding.ibCross
-        btnCheck = binding.btnCheck
-        btnReview = binding.btnReview
-        btnRestart = binding.btnRestart
-        tvCantoneseDescription = binding.tvCantoneseDescription
-        tvCantoneseTranslation = binding.tvCantoneseTranslation
-        tvEnglishDescription = binding.tvEnglishDescription
-        tvEnglishTranslation = binding.tvEnglishTranslation
-        tvWordID = binding.tvWordID
-        tvLeftScore = binding.tvLeftScore
-        tvRightScore = binding.tvRightScore
-
-        tvCantoneseTranslation.visibility = INVISIBLE
-        tvCantoneseDescription.visibility = INVISIBLE
-
-        getWord()
+    private fun goToReviewActivity() {
+        val intent = Intent(this, ReviewActivity::class.java)
+        intent.putIntegerArrayListExtra("key", wrongWordList)
+        startActivity(intent)
     }
 
     private fun getWord() {

@@ -37,14 +37,24 @@ class SearchActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
 
-        setSupportActionBar(binding?.toolbarSearchActivity)
+        initialiseActivity()
+
+        val dao = (application as CanStudyApp).db.wordDao()
+
+        btnAdd.setOnClickListener {
+            addWordDialog(dao)
+        }
+    }
+
+    private fun initialiseActivity() {
+        setSupportActionBar(binding.toolbarSearchActivity)
         if (supportActionBar != null) {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.title = "Search word/phrase"
         }
-        binding?.toolbarSearchActivity?.setNavigationOnClickListener { onBackPressed() }
+        binding.toolbarSearchActivity?.setNavigationOnClickListener { onBackPressed() }
 
         val dao = (application as CanStudyApp).db.wordDao()
 
@@ -58,10 +68,6 @@ class SearchActivity : AppCompatActivity() {
         setupRadioGroupListener()
         setupWordRecyclerView(dao)
         setupEnglishSearchListener()
-
-        btnAdd.setOnClickListener {
-            addWordDialog(dao)
-        }
     }
 
     private fun addWordDialog(wordDao: WordDao) {
