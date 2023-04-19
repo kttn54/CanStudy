@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/white" />
+        android:background="@color/white"/>
 
     <LinearLayout
         android:id="@+id/llTopButtons"
@@ -32,8 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="REVIEW"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/btnRestart"
@@ -41,8 +40,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="RESTART"
-            android:layout_weight="1"
-            />
+            android:layout_weight="1"/>
 
     </LinearLayout>
 
@@ -68,8 +66,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center"
-        >
+        android:gravity="center">
 
         <TextView
             android:id="@+id/tvLeftScore"
@@ -94,6 +91,7 @@
             android:layout_margin="10dp"
             android:text="0"
             android:textSize="30sp"/>
+
     </LinearLayout>
 
     <TextView
@@ -107,7 +105,7 @@
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
         android:textSize="20sp"
-        android:text="Translate the following to Cantonese:" />
+        android:text="Translate the following to Canto:"/>
 
     <TextView
         android:id="@+id/tvEnglishTranslation"
@@ -134,7 +132,7 @@
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
         android:text="Cantonese:"
-        android:textSize="20sp" />
+        android:textSize="20sp"/>
 
     <TextView
         android:id="@+id/tvCantoneseTranslation"
@@ -162,24 +160,24 @@
 
         <ImageButton
             android:id="@+id/ibTick"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="100dp"
             android:layout_weight="1"
             android:background="@color/white"
             android:scaleType="fitCenter"
-            android:src="@drawable/greentick2" />
+            android:src="@drawable/greentick2"/>
 
         <ImageButton
             android:id="@+id/ibCross"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginLeft="100dp"
             android:layout_marginRight="100dp"
             android:layout_weight="1"
             android:background="@color/white"
             android:scaleType="fitCenter"
-            android:src="@drawable/redcross2" />
+            android:src="@drawable/redcross2"/>
 
     </LinearLayout>
 
@@ -192,8 +190,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Check"
-        />
+        android:text="Check"/>
 
     <TextView
         android:id="@+id/tvWordID"

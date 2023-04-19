@@ -23,6 +23,7 @@ class ReviewActivity : AppCompatActivity() {
     private lateinit var tvNoWrongWordsFound: TextView
     private lateinit var btnToggleVisibility: Button
     private lateinit var btnShuffle: Button
+    private lateinit var toggleTranslation: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,28 +32,31 @@ class ReviewActivity : AppCompatActivity() {
 
         initialiseActivity()
 
-        var toggleTranslation = "off"
+        toggleTranslation = "off"
         val intent = intent
         val wrongWordList: ArrayList<Int> = intent.getIntegerArrayListExtra("key") as ArrayList<Int>
         val dao = (application as CanStudyApp).db.wordDao()
-        if (wrongWordList != null) {
+        if (!wrongWordList.isNullOrEmpty()) {
             setupWordRecyclerView(dao, wrongWordList, toggleTranslation)
         } else {
             tvNoWrongWordsFound.visibility = VISIBLE
         }
 
         btnToggleVisibility.setOnClickListener {
-            Log.e("toggle", "$toggleTranslation")
-            if (toggleTranslation == "off") {
-                toggleTranslation = "on"
-                setupWordRecyclerView(dao, wrongWordList, toggleTranslation)
-            } else {
-                toggleTranslation = "off"
-                setupWordRecyclerView(dao, wrongWordList, toggleTranslation)
-            }
+            toggleTranslation(toggleTranslation, dao, wrongWordList)
 
         }
         btnShuffle.setOnClickListener { shuffleWordList(wrongWordList) }
+    }
+
+    private fun toggleTranslation(toggle: String, dao: WordDao, list: ArrayList<Int>) {
+        if (toggle == "off") {
+            toggleTranslation = "on"
+            setupWordRecyclerView(dao, list, toggleTranslation)
+        } else {
+            toggleTranslation = "off"
+            setupWordRecyclerView(dao, list, toggleTranslation)
+        }
     }
 
     private fun shuffleWordList(wordList: ArrayList<Int>) {

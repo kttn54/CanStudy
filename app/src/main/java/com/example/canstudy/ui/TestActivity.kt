@@ -166,6 +166,7 @@ class TestActivity : AppCompatActivity() {
         tvLeftScore.text = correctScore.toString()
         tvRightScore.text = totalScore.toString()
         repeatedWords.clear()
+        wrongWordList.clear()
         enableElements()
         getWord()
         tvCantoneseDescription.visibility = INVISIBLE
