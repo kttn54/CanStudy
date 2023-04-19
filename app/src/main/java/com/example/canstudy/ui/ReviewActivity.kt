@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View.VISIBLE
+import android.widget.Button
 import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,6 +21,8 @@ class ReviewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityReviewBinding
     private lateinit var tvNoWrongWordsFound: TextView
+    private lateinit var btnToggleVisibility: Button
+    private lateinit var btnShuffle: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,15 +31,36 @@ class ReviewActivity : AppCompatActivity() {
 
         initialiseActivity()
 
+        var toggleTranslation = "off"
         val intent = intent
-        val wrongWordList = intent.getIntegerArrayListExtra("key")
+        val wrongWordList: ArrayList<Int> = intent.getIntegerArrayListExtra("key") as ArrayList<Int>
         val dao = (application as CanStudyApp).db.wordDao()
-
         if (wrongWordList != null) {
-            setupWordRecyclerView(dao, wrongWordList)
+            setupWordRecyclerView(dao, wrongWordList, toggleTranslation)
         } else {
             tvNoWrongWordsFound.visibility = VISIBLE
         }
+
+        btnToggleVisibility.setOnClickListener {
+            Log.e("toggle", "$toggleTranslation")
+            if (toggleTranslation == "off") {
+                toggleTranslation = "on"
+                setupWordRecyclerView(dao, wrongWordList, toggleTranslation)
+            } else {
+                toggleTranslation = "off"
+                setupWordRecyclerView(dao, wrongWordList, toggleTranslation)
+            }
+
+        }
+        btnShuffle.setOnClickListener { shuffleWordList(wrongWordList) }
+    }
+
+    private fun shuffleWordList(wordList: ArrayList<Int>) {
+        val shuffledWordList: ArrayList<Int> = ArrayList(wordList)
+        shuffledWordList.shuffle()
+        val dao = (application as CanStudyApp).db.wordDao()
+        setupWordRecyclerView(dao, shuffledWordList, "off")
+
     }
 
     private fun initialiseActivity() {
@@ -45,13 +69,14 @@ class ReviewActivity : AppCompatActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.title = "Review"
         }
-
         tvNoWrongWordsFound = binding.tvNoWrongWordsFound
+        btnToggleVisibility = binding.btnToggleVisibility
+        btnShuffle = binding.btnShuffle
 
-        binding?.toolbarReviewActivity?.setNavigationOnClickListener { onBackPressed() }
+        binding.toolbarReviewActivity.setNavigationOnClickListener { onBackPressed() }
     }
 
-    private fun setupWordRecyclerView(wordDao: WordDao, wrongWordIDList: ArrayList<Int>) {
+    private fun setupWordRecyclerView(wordDao: WordDao, wrongWordIDList: ArrayList<Int>, toggleTranslation: String) {
         val wrongWordIDList = wrongWordIDList
         val wrongWordList = ArrayList<WordEntity>()
         lifecycleScope.launch {
@@ -62,12 +87,12 @@ class ReviewActivity : AppCompatActivity() {
                 val newWord = wordDao.readWordById(id).first()
                 wrongWordList.add(newWord)
             }
-            attachAdapter(wrongWordList)
+            attachAdapter(wrongWordList, toggleTranslation)
         }
     }
 
-    private fun attachAdapter(list: ArrayList<WordEntity>) {
-        val reviewAdapter = ReviewAdapter(list)
+    private fun attachAdapter(list: ArrayList<WordEntity>, toggleTranslation: String) {
+        val reviewAdapter = ReviewAdapter(list, toggleTranslation)
         binding.rvReview.adapter = reviewAdapter
     }
 }

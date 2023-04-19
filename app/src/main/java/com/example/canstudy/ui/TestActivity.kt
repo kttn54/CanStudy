@@ -40,15 +40,12 @@ class TestActivity : AppCompatActivity() {
     private var totalScore = 0
     private var repeatedWords = ArrayList<Int>()
     private var wrongWordList = ArrayList<Int>()
-    private val generator = Random
-    private val randomIndex: Int = generator.nextInt()
+    private var randomIndex: Int = Random.nextInt()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTestBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
 
         initialiseActivity()
 
@@ -65,7 +62,7 @@ class TestActivity : AppCompatActivity() {
             supportActionBar?.setDisplayHomeAsUpEnabled(true)
             supportActionBar?.title = "Test"
         }
-        binding?.toolbarTestActivity?.setNavigationOnClickListener { onBackPressed() }
+        binding.toolbarTestActivity?.setNavigationOnClickListener { onBackPressed() }
 
         ibTick = binding.ibTick
         ibCross = binding.ibCross
@@ -138,15 +135,16 @@ class TestActivity : AppCompatActivity() {
                 return@getWordList
             }
 
-            var randomValue: Int
-            do {
-                randomValue = Random.nextInt(0, wordList.size)
-            } while (repeatedWords.contains(randomValue))
+            wordList.shuffle()
 
-            tvEnglishTranslation.text = wordList[randomValue].getEnglishWord()
-            tvCantoneseTranslation.text = wordList[randomValue].getCantoWord()
-            tvWordID.text = wordList[randomValue].getId().toString()
-            repeatedWords.add(randomValue)
+            do {
+                randomIndex = Random.nextInt(0, wordList.size)
+            } while (repeatedWords.contains(randomIndex))
+
+            tvEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
+            tvCantoneseTranslation.text = wordList[randomIndex].getCantoWord()
+            tvWordID.text = wordList[randomIndex].getId().toString()
+            repeatedWords.add(randomIndex)
         }
     }
 

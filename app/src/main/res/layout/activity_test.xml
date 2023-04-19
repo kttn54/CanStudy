@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -9,12 +9,18 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarTestActivity"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
         android:background="@color/white" />
 
     <LinearLayout
         android:id="@+id/llTopButtons"
+        app:layout_constraintTop_toBottomOf="@id/toolbarTestActivity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -40,10 +46,12 @@
 
     </LinearLayout>
 
-    
     <TextView
         android:id="@+id/tvScore"
-        android:layout_marginTop="50dp"
+        app:layout_constraintTop_toBottomOf="@id/llTopButtons"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="30dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:gravity="center"
@@ -54,6 +62,9 @@
 
     <LinearLayout
         android:id="@+id/llScore"
+        app:layout_constraintTop_toBottomOf="@id/tvScore"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -83,13 +94,13 @@
             android:layout_margin="10dp"
             android:text="0"
             android:textSize="30sp"/>
-
-
-
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvEnglishDescription"
+        app:layout_constraintTop_toBottomOf="@id/llScore"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="40dp"
@@ -100,6 +111,9 @@
 
     <TextView
         android:id="@+id/tvEnglishTranslation"
+        app:layout_constraintTop_toBottomOf="@id/tvEnglishDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -111,6 +125,9 @@
 
     <TextView
         android:id="@+id/tvCantoneseDescription"
+        app:layout_constraintTop_toBottomOf="@id/tvEnglishTranslation"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
@@ -121,6 +138,9 @@
 
     <TextView
         android:id="@+id/tvCantoneseTranslation"
+        app:layout_constraintTop_toBottomOf="@id/tvCantoneseDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -131,10 +151,13 @@
         tools:text="Lei5 hou2"/>
 
     <LinearLayout
-        android:id="@+id/llButtons"
+        android:id="@+id/llImageButtons"
+        app:layout_constraintTop_toBottomOf="@id/tvCantoneseDescription"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="90dp"
         android:orientation="horizontal">
 
         <ImageButton
@@ -162,6 +185,9 @@
 
     <Button
         android:id="@+id/btnCheck"
+        app:layout_constraintTop_toBottomOf="@id/llImageButtons"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginTop="30dp"
         android:layout_width="150dp"
         android:layout_height="wrap_content"
@@ -171,6 +197,9 @@
 
     <TextView
         android:id="@+id/tvWordID"
+        app:layout_constraintTop_toBottomOf="@id/btnCheck"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -181,8 +210,4 @@
         android:textSize="23sp"
         tools:text="12"/>
 
-
-
-    
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
