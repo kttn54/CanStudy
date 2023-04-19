@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.WindowManager
@@ -39,11 +40,15 @@ class TestActivity : AppCompatActivity() {
     private var totalScore = 0
     private var repeatedWords = ArrayList<Int>()
     private var wrongWordList = ArrayList<Int>()
+    private val generator = Random
+    private val randomIndex: Int = generator.nextInt()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTestBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
 
         initialiseActivity()
 
@@ -125,10 +130,11 @@ class TestActivity : AppCompatActivity() {
         getWordList(dao) { wordList ->
             // Handle the case where all words have been chosen
             if (repeatedWords.size == wordList.size) {
-                addRestartReviewDialog()
-                disableElements()
                 tvCantoneseDescription.visibility = VISIBLE
                 tvCantoneseTranslation.visibility = VISIBLE
+                addRestartReviewDialog()
+                disableElements()
+                repeatedWords.clear()
                 return@getWordList
             }
 
@@ -217,5 +223,6 @@ class TestActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         (application as CanStudyApp).db.close()
+        repeatedWords.clear()
     }
 }

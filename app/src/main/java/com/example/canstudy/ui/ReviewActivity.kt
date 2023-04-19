@@ -9,10 +9,11 @@ import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.canstudy.CanStudyApp
 import com.example.canstudy.databinding.ActivityReviewBinding
-import com.example.canstudy.db.adapter.WordAdapter
+import com.example.canstudy.db.adapter.ReviewAdapter
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class ReviewActivity : AppCompatActivity() {
@@ -50,29 +51,23 @@ class ReviewActivity : AppCompatActivity() {
         binding?.toolbarReviewActivity?.setNavigationOnClickListener { onBackPressed() }
     }
 
-    private fun setupWordRecyclerView(wordDao: WordDao, wrongWordList: ArrayList<Int>) {
-        val wordList = ArrayList<WordEntity>()
+    private fun setupWordRecyclerView(wordDao: WordDao, wrongWordIDList: ArrayList<Int>) {
+        val wrongWordIDList = wrongWordIDList
+        val wrongWordList = ArrayList<WordEntity>()
         lifecycleScope.launch {
-            wordDao.readAll().collect { allWordsList ->
-                if (allWordsList.isNotEmpty()) {
-                    binding.rvReview.layoutManager = LinearLayoutManager(this@ReviewActivity)
-                    for (word in allWordsList) {
-                        val newWord = WordEntity(
-                            word.ID,
-                            word.CANTO_WORD,
-                            word.ENGLISH_WORD,
-                            word.CORRECT_STATUS
-                        )
-                        wordList.add(newWord)
-                    }
-                    attachAdapter(wordList)
-                }
+            binding.rvReview.layoutManager = LinearLayoutManager(this@ReviewActivity)
+            // first() collects the first result from the query. This converts the query from a
+            // Flow<WordEntity> to a WordEntity type.
+            for (id in wrongWordIDList) {
+                val newWord = wordDao.readWordById(id).first()
+                wrongWordList.add(newWord)
             }
+            attachAdapter(wrongWordList)
         }
     }
 
     private fun attachAdapter(list: ArrayList<WordEntity>) {
-        val wordAdapter = WordAdapter(list)
-        binding.rvReview.adapter = wordAdapter
+        val reviewAdapter = ReviewAdapter(list)
+        binding.rvReview.adapter = reviewAdapter
     }
 }
