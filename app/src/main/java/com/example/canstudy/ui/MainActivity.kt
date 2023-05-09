@@ -5,6 +5,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.canstudy.databinding.ActivityMainBinding
 
+/**
+ * A class that adds functionality to four buttons, which takes the user to different activities.
+ */
+
 class MainActivity : AppCompatActivity() {
 
     private var binding: ActivityMainBinding? = null

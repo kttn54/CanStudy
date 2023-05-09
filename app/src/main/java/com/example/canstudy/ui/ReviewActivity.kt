@@ -20,6 +20,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
+/**
+ * A class that displays wrong words from the TestActivity for the user to review.
+ */
+
 class ReviewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityReviewBinding
@@ -42,6 +46,9 @@ class ReviewActivity : AppCompatActivity() {
         btnShuffle.setOnClickListener { shuffleWordList(wrongWordList) }
     }
 
+    /**
+     * A function that toggles the translation for the English words.
+     */
     private fun toggleTranslation(toggle: String, dao: WordDao, list: ArrayList<Int>) {
         if (toggle == "off") {
             toggleTranslation = "on"
@@ -52,6 +59,9 @@ class ReviewActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that shuffles the order of the wrong words.
+     */
     private fun shuffleWordList(wordList: ArrayList<Int>) {
         val shuffledWordList: ArrayList<Int> = ArrayList(wordList)
         shuffledWordList.shuffle()
@@ -59,6 +69,9 @@ class ReviewActivity : AppCompatActivity() {
 
     }
 
+    /**
+     * A function that initialises the word list and UI components.
+     */
     private fun initialiseActivity() {
         setSupportActionBar(binding.toolbarReviewActivity)
         if (supportActionBar != null) {
@@ -84,6 +97,9 @@ class ReviewActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that initialises the RecyclerView for the wrong word list and handles the swipe functionality.
+     */
     private fun setupWordRecyclerView(wordDao: WordDao, wrongWordIDList: ArrayList<Int>, toggleTranslation: String) {
         val wrongWordIDList = wrongWordIDList
         val wrongWordList = ArrayList<WordEntity>()
@@ -98,6 +114,7 @@ class ReviewActivity : AppCompatActivity() {
             attachAdapter(wrongWordList, toggleTranslation)
         }
 
+        // TODO: consider making a separate function for the swipe handler.
         val swipeHandler = object : SwipeToDeleteCallback(ReviewAdapter(wrongWordList, toggleTranslation)) {
             override fun onChildDraw(
                 c: Canvas,
@@ -108,7 +125,6 @@ class ReviewActivity : AppCompatActivity() {
                 actionState: Int,
                 isCurrentlyActive: Boolean
             ) {
-                //TODO: add custom drawing here
                 super.onChildDraw(
                     c,
                     recyclerView,
@@ -123,9 +139,10 @@ class ReviewActivity : AppCompatActivity() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
                 Log.e("asdf", "ReviewActivity position is $position, word removed is ${wrongWordList[position]}")
-                (rvReview.adapter as ReviewAdapter).deleteItem(position)
+                //(rvReview.adapter as ReviewAdapter).deleteItem(position)
                 wrongWordList.removeAt(position)
                 rvReview.adapter?.notifyItemRemoved(position)
+
             }
         }
 
@@ -138,6 +155,10 @@ class ReviewActivity : AppCompatActivity() {
         rvReview.adapter = reviewAdapter
     }
 }
+
+/**
+ * A class that defines the swipe functionality for the item rows in the RecyclerView.
+ */
 
 open class SwipeToDeleteCallback(private val adapter: ReviewAdapter) : ItemTouchHelper.Callback() {
 

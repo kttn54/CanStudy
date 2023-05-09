@@ -25,6 +25,10 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.collections.ArrayList
 
+/**
+ * A class that allows the user to search words in English or Cantonese.
+ */
+
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
@@ -48,6 +52,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that initialises the word list and UI components.
+     */
     private fun initialiseActivity() {
         setSupportActionBar(binding.toolbarSearchActivity)
         if (supportActionBar != null) {
@@ -70,6 +77,9 @@ class SearchActivity : AppCompatActivity() {
         setupEnglishSearchListener()
     }
 
+    /**
+     * A function to add a word to the Word Database.
+     */
     private fun addWordDialog(wordDao: WordDao) {
         val wordDialog = Dialog(this)
         val dialogBinding = DialogAddWordBinding.inflate(layoutInflater)
@@ -114,6 +124,9 @@ class SearchActivity : AppCompatActivity() {
         wordDialog.show()
     }
 
+    /**
+     * A function to set up the English and Cantonese radio buttons.
+     */
     private fun setupRadioGroupListener() {
         binding.rgLanguage.setOnCheckedChangeListener { _, checkedId: Int ->
             if (checkedId == binding.rbEnglish.id) {
@@ -127,6 +140,41 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function to search and filter the English words by the user input.
+     */
+    private fun setupEnglishSearchListener() {
+        searchBar.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                val query = s.toString()
+                filterWithQuery(query)
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    /**
+     * A function to search and filter the Cantonese words by the user input.
+     */
+    private fun setupCantoneseSearchListener() {
+        searchBar.addTextChangedListener(object: TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
+            override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+                val query = s.toString()
+                filterWithQuery(query)
+            }
+
+            override fun afterTextChanged(s: Editable?) {}
+        })
+    }
+
+    /**
+     * A function that initialises the RecyclerView for the search list.
+     */
     private fun setupWordRecyclerView(wordDao: WordDao) {
         val wordList = ArrayList<WordEntity>()
         lifecycleScope.launch {
@@ -148,32 +196,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
-    private fun setupEnglishSearchListener() {
-        searchBar.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                val query = s.toString()
-                filterWithQuery(query)
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-    }
-
-    private fun setupCantoneseSearchListener() {
-        searchBar.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                val query = s.toString()
-                filterWithQuery(query)
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-    }
-
+    /**
+     * A function that filters the word list by the user input.
+     */
     private fun filterWithQuery(query: String) {
         val dao = (application as CanStudyApp).db.wordDao()
         getWordList(dao) { wordList ->
@@ -194,6 +219,9 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that filters the word list by the user input.
+     */
     private fun getWordList(wordDao: WordDao, callback: (ArrayList<WordEntity>) -> Unit) {
         lifecycleScope.launch {
             wordDao.readAll().collect { allWordsList ->
@@ -215,11 +243,17 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that passes the current array list to the RecyclerView adapter.
+     */
     private fun attachAdapter(list: ArrayList<WordEntity>) {
         val wordAdapter = WordAdapter(list)
         binding.rvSearch.adapter = wordAdapter
     }
 
+    /**
+     * A function that changes the RecyclerView visibility based on the current word list
+     */
     private fun toggleRecyclerView(wordList: ArrayList<WordEntity>) {
         if (wordList.isEmpty()) {
             binding.rvSearch.visibility = View.INVISIBLE
@@ -230,6 +264,10 @@ class SearchActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that calls the default behaviour as the activity is destroyed, and also
+     * closes the database connection.
+     */
     override fun onDestroy() {
         super.onDestroy()
         (application as CanStudyApp).db.close()

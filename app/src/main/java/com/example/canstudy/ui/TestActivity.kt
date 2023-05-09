@@ -56,6 +56,9 @@ class TestActivity : AppCompatActivity() {
         btnReview.setOnClickListener { goToReviewActivity() }
     }
 
+    /**
+     * A function that initialises the word list and UI components.
+     */
     private fun initialiseActivity() {
         setSupportActionBar(binding?.toolbarTestActivity)
         if (supportActionBar != null) {
