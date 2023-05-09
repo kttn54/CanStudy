@@ -1,6 +1,5 @@
 package com.example.canstudy.ui
 
-import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
@@ -13,10 +12,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.canstudy.CanStudyApp
 import com.example.canstudy.databinding.ActivityReviewBinding
+import com.example.canstudy.db.SwipeToDeleteCallback
 import com.example.canstudy.db.adapter.ReviewAdapter
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
@@ -44,29 +43,22 @@ class ReviewActivity : AppCompatActivity() {
 
         btnToggleVisibility.setOnClickListener { toggleTranslation(toggleTranslation, dao, wrongWordList) }
         btnShuffle.setOnClickListener { shuffleWordList(wrongWordList) }
+
+        //TODO: swiping a row to delete still duplicates rows. possibly because the adapter is not being updated.
+        swipeRow()
     }
 
-    /**
-     * A function that toggles the translation for the English words.
-     */
-    private fun toggleTranslation(toggle: String, dao: WordDao, list: ArrayList<Int>) {
-        if (toggle == "off") {
-            toggleTranslation = "on"
-            setupWordRecyclerView(dao, list, toggleTranslation)
-        } else {
-            toggleTranslation = "off"
-            setupWordRecyclerView(dao, list, toggleTranslation)
+    private fun swipeRow() {
+        val swipeHandler = object : SwipeToDeleteCallback() {
+            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                val position = viewHolder.adapterPosition
+                wrongWordList.removeAt(position)
+                rvReview.adapter?.notifyItemRemoved(position)
+            }
         }
-    }
 
-    /**
-     * A function that shuffles the order of the wrong words.
-     */
-    private fun shuffleWordList(wordList: ArrayList<Int>) {
-        val shuffledWordList: ArrayList<Int> = ArrayList(wordList)
-        shuffledWordList.shuffle()
-        setupWordRecyclerView(dao, shuffledWordList, "off")
-
+        val itemTouchHelper = ItemTouchHelper(swipeHandler)
+        itemTouchHelper.attachToRecyclerView(rvReview)
     }
 
     /**
@@ -101,87 +93,47 @@ class ReviewActivity : AppCompatActivity() {
      * A function that initialises the RecyclerView for the wrong word list and handles the swipe functionality.
      */
     private fun setupWordRecyclerView(wordDao: WordDao, wrongWordIDList: ArrayList<Int>, toggleTranslation: String) {
-        val wrongWordIDList = wrongWordIDList
-        val wrongWordList = ArrayList<WordEntity>()
+        val wrongWordEntityList = ArrayList<WordEntity>()
         lifecycleScope.launch {
-            binding.rvReview.layoutManager = LinearLayoutManager(this@ReviewActivity)
+            rvReview.layoutManager = LinearLayoutManager(this@ReviewActivity)
             // first() collects the first result from the query. This converts the query from a
             // Flow<WordEntity> to a WordEntity type.
             for (id in wrongWordIDList) {
                 val newWord = wordDao.readWordById(id).first()
-                wrongWordList.add(newWord)
+                wrongWordEntityList.add(newWord)
             }
-            attachAdapter(wrongWordList, toggleTranslation)
+            attachAdapter(wrongWordEntityList, toggleTranslation)
         }
-
-        // TODO: consider making a separate function for the swipe handler.
-        val swipeHandler = object : SwipeToDeleteCallback(ReviewAdapter(wrongWordList, toggleTranslation)) {
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-            }
-
-            override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                val position = viewHolder.adapterPosition
-                Log.e("asdf", "ReviewActivity position is $position, word removed is ${wrongWordList[position]}")
-                //(rvReview.adapter as ReviewAdapter).deleteItem(position)
-                wrongWordList.removeAt(position)
-                rvReview.adapter?.notifyItemRemoved(position)
-
-            }
-        }
-
-        val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(rvReview)
     }
 
     private fun attachAdapter(list: ArrayList<WordEntity>, toggleTranslation: String) {
         val reviewAdapter = ReviewAdapter(list, toggleTranslation)
         rvReview.adapter = reviewAdapter
     }
-}
 
-/**
- * A class that defines the swipe functionality for the item rows in the RecyclerView.
- */
-
-open class SwipeToDeleteCallback(private val adapter: ReviewAdapter) : ItemTouchHelper.Callback() {
-
-    // This function defines the swipe and drag behaviour of an item in a RecyclerView.
-    // DragFlag of 0 means the item is not draggable.
-    override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
-    ): Int {
-        return makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
+    /**
+     * A function that toggles the translation for the English words.
+     */
+    private fun toggleTranslation(toggle: String, dao: WordDao, list: ArrayList<Int>) {
+        if (toggle == "off") {
+            toggleTranslation = "on"
+            setupWordRecyclerView(dao, list, toggleTranslation)
+        } else {
+            toggleTranslation = "off"
+            setupWordRecyclerView(dao, list, toggleTranslation)
+        }
+        Log.e("qwer","wrongWordListToggle is $wrongWordList")
     }
 
-    // This function does nothing as we only want the swipe functionality.
-    override fun onMove(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
-    ): Boolean {
-        return false
-    }
-
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
-        adapter.deleteItem(position)
+    /**
+     * A function that shuffles the order of the wrong words.
+     */
+    private fun shuffleWordList(wordList: ArrayList<Int>) {
+        val shuffledWordList: ArrayList<Int> = ArrayList(wordList)
+        shuffledWordList.shuffle()
+        setupWordRecyclerView(dao, shuffledWordList, "off")
+        Log.e("qwer","wrongWordListShuffle is $wrongWordList")
     }
 }
+
+
