@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.canstudy.CanStudyApp
 import com.example.canstudy.databinding.ActivityReviewBinding
+import com.example.canstudy.db.SwipeToDeleteCallback
 import com.example.canstudy.db.adapter.ReviewAdapter
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
@@ -114,35 +115,11 @@ class ReviewActivity : AppCompatActivity() {
             attachAdapter(wrongWordList, toggleTranslation)
         }
 
-        // TODO: consider making a separate function for the swipe handler.
-        val swipeHandler = object : SwipeToDeleteCallback(ReviewAdapter(wrongWordList, toggleTranslation)) {
-            override fun onChildDraw(
-                c: Canvas,
-                recyclerView: RecyclerView,
-                viewHolder: RecyclerView.ViewHolder,
-                dX: Float,
-                dY: Float,
-                actionState: Int,
-                isCurrentlyActive: Boolean
-            ) {
-                super.onChildDraw(
-                    c,
-                    recyclerView,
-                    viewHolder,
-                    dX,
-                    dY,
-                    actionState,
-                    isCurrentlyActive
-                )
-            }
-
+        val swipeHandler = object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                Log.e("asdf", "ReviewActivity position is $position, word removed is ${wrongWordList[position]}")
-                //(rvReview.adapter as ReviewAdapter).deleteItem(position)
                 wrongWordList.removeAt(position)
                 rvReview.adapter?.notifyItemRemoved(position)
-
             }
         }
 
@@ -153,35 +130,5 @@ class ReviewActivity : AppCompatActivity() {
     private fun attachAdapter(list: ArrayList<WordEntity>, toggleTranslation: String) {
         val reviewAdapter = ReviewAdapter(list, toggleTranslation)
         rvReview.adapter = reviewAdapter
-    }
-}
-
-/**
- * A class that defines the swipe functionality for the item rows in the RecyclerView.
- */
-
-open class SwipeToDeleteCallback(private val adapter: ReviewAdapter) : ItemTouchHelper.Callback() {
-
-    // This function defines the swipe and drag behaviour of an item in a RecyclerView.
-    // DragFlag of 0 means the item is not draggable.
-    override fun getMovementFlags(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder
-    ): Int {
-        return makeMovementFlags(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT)
-    }
-
-    // This function does nothing as we only want the swipe functionality.
-    override fun onMove(
-        recyclerView: RecyclerView,
-        viewHolder: RecyclerView.ViewHolder,
-        target: RecyclerView.ViewHolder
-    ): Boolean {
-        return false
-    }
-
-    override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-        val position = viewHolder.adapterPosition
-        adapter.deleteItem(position)
     }
 }
