@@ -1,7 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="main_button">120dp</dimen>
-
-
+    <dimen name="game_option_letter_size">25sp</dimen>
+    <dimen name="game_option_description_size">20sp</dimen>
+    <dimen name="game_option_letter_A_top_margin">40dp</dimen>
+    <dimen name="game_option_letter_BCD_top_margin">50dp</dimen>
+    <dimen name="game_option_letter_start_end_margin">20dp</dimen>
+    <dimen name="game_option_description_start_margin">20dp</dimen>
+    <dimen name="game_dialog_end_margin">12dp</dimen>
 
 </resources>

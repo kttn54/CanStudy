@@ -1,5 +1,6 @@
 package com.example.canstudy.ui
 
+import android.app.Dialog
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -7,11 +8,13 @@ import android.os.CountDownTimer
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Button
+import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import com.example.canstudy.Constants
 import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityGameBinding
+import com.example.canstudy.databinding.DialogExitGameBinding
 
 class GameActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -19,9 +22,16 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvDifficultySetting : TextView
     private lateinit var tvCountdown : TextView
     private lateinit var tvGameTime : TextView
+    private lateinit var tvGameScore : TextView
+    private lateinit var tvGameEnglishDescription : TextView
     private lateinit var btnEasyDifficulty: Button
     private lateinit var btnMediumDifficulty: Button
     private lateinit var btnHardDifficulty: Button
+    private lateinit var llGameScore: LinearLayout
+    private lateinit var llOptionA: LinearLayout
+    private lateinit var llOptionB: LinearLayout
+    private lateinit var llOptionC: LinearLayout
+    private lateinit var llOptionD: LinearLayout
 
     private var difficultySetting = "Easy"
 
@@ -59,9 +69,17 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         tvDifficultySetting = binding.tvDifficultySetting
         tvCountdown = binding.tvCountdown
         tvGameTime = binding.tvGameTime
+        tvGameScore = binding.tvGameScore
+        tvGameEnglishDescription = binding.tvGameEnglishDescription
         btnEasyDifficulty = binding.btnEasyDifficulty
         btnMediumDifficulty = binding.btnMediumDifficulty
         btnHardDifficulty = binding.btnHardDifficulty
+        llGameScore = binding.llGameScore
+        llOptionA = binding.llOptionA
+        llOptionB = binding.llOptionB
+        llOptionC = binding.llOptionC
+        llOptionD = binding.llOptionD
+
         progressBar = binding.progressBarGame
         mediaPlayer = MediaPlayer.create(this@GameActivity, R.raw.yummy_dim_sum)
     }
@@ -105,6 +123,13 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         binding.toolbarGame.title = "Game - $difficultySetting"
         progressBar.visibility = View.VISIBLE
         tvGameTime.visibility = View.VISIBLE
+        tvGameScore.visibility = View.VISIBLE
+        tvGameEnglishDescription.visibility = View.VISIBLE
+        llGameScore.visibility = View.VISIBLE
+        llOptionA.visibility = View.VISIBLE
+        llOptionB.visibility = View.VISIBLE
+        llOptionC.visibility = View.VISIBLE
+        llOptionD.visibility = View.VISIBLE
 
         progressBar.max = 60
         var currentTime = 60
@@ -117,9 +142,25 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             override fun onFinish() {
-
+                 // mediaPlayer.stop()
             }
         }.start()
+    }
+
+    override fun onBackPressed() {
+        var customDialog = Dialog(this)
+        val dialogBinding = DialogExitGameBinding.inflate(layoutInflater)
+        customDialog.setContentView(dialogBinding.root)
+        customDialog.setCanceledOnTouchOutside(false)
+
+        dialogBinding.btnGameDialogYes.setOnClickListener {
+            this@GameActivity.finish()
+            customDialog.dismiss()
+        }
+        dialogBinding.btnGameDialogNo.setOnClickListener {
+            customDialog.dismiss()
+        }
+        customDialog.show()
     }
 
     override fun onDestroy() {

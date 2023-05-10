@@ -1,3 +1,13 @@
 <resources>
     <string name="app_name">CanStudy</string>
+    <string name="game_option_A">A</string>
+    <string name="game_option_B">B</string>
+    <string name="game_option_C">C</string>
+    <string name="game_option_D">D</string>
+    <string name="tv_game_score">Score:</string>
+    <string name="tv_game_english_description">Translate the following to Canto:</string>
+    <string name="dialog_confirmation_question">Are you sure?</string>
+    <string name="dialog_confirmation_description">This will stop your game. Don\'t be a scrub, are you sure you want to quit?</string>
+    <string name="dialog_no_button">No</string>
+    <string name="dialog_yes_button">Yes</string>
 </resources>

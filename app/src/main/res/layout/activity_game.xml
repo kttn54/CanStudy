@@ -8,59 +8,63 @@
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarGame"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize" />
+        android:layout_height="?attr/actionBarSize"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
         android:id="@+id/progressBarGame"
-        app:layout_constraintTop_toBottomOf="@id/toolbarGame"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        style="?android:progressBarStyleHorizontal"
         android:layout_width="match_parent"
         android:layout_height="35dp"
-        style="?android:progressBarStyleHorizontal"
         android:progressDrawable="@drawable/custom_progressbar_bg"
         android:visibility="invisible"
-        tools:visibility="visible"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarGame"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/tvGameTime"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintTop_toBottomOf="@id/toolbarGame"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:visibility="invisible"
-        tools:text="60"
+        android:textColor="@color/black"
         android:textSize="26sp"
-        android:textColor="@color/black" />
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbarGame"
+        tools:text="60" />
 
     <TextView
         android:id="@+id/tvGameScore"
-        app:layout_constraintTop_toBottomOf="@id/progressBarGame"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center"
-        android:textSize="30sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Score:"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:text="@string/tv_game_score"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/progressBarGame"
+        android:visibility="invisible"
+        tools:visibility="visible" />
 
     <LinearLayout
         android:id="@+id/llGameScore"
-        app:layout_constraintTop_toBottomOf="@id/tvGameScore"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:orientation="horizontal"
-        android:gravity="center">
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvGameScore"
+        android:visibility="invisible"
+        tools:visibility="visible">
 
         <TextView
             android:id="@+id/tvGameLeftScore"
@@ -68,7 +72,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:text="0"
-            android:textSize="30sp"/>
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/tvDash"
@@ -76,7 +80,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:text="/"
-            android:textSize="30sp"/>
+            android:textSize="30sp" />
 
         <TextView
             android:id="@+id/tvGameRightScore"
@@ -84,98 +88,223 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:text="0"
-            android:textSize="30sp"/>
+            android:textSize="30sp" />
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvGameEnglishDescription"
-        app:layout_constraintTop_toBottomOf="@id/llGameScore"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginRight="20dp"
+        android:text="@string/tv_game_english_description"
         android:textSize="20sp"
-        android:text="Translate the following to Canto:"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llGameScore"
+        android:visibility="invisible"
+        tools:visibility="visible" />
 
     <TextView
         android:id="@+id/tvGameEnglishTranslation"
-        app:layout_constraintTop_toBottomOf="@id/tvGameEnglishDescription"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="10dp"
         android:layout_marginRight="20dp"
         android:textColor="@color/black"
         android:textSize="20sp"
-        tools:text="Hello"/>
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvGameEnglishDescription"
+        tools:text="Hello" />
+
+    <LinearLayout
+        android:id="@+id/llOptionA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/game_option_letter_A_top_margin"
+        android:layout_marginStart="@dimen/game_option_letter_start_end_margin"
+        android:layout_marginEnd="@dimen/game_option_letter_start_end_margin"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvGameEnglishTranslation"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/game_option_A"
+            android:textColor="@color/black"
+            android:textSize="@dimen/game_option_letter_size" />
+
+        <TextView
+            android:id="@+id/tvGameOptionA"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/game_option_description_size"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/game_option_description_start_margin"
+            tools:text="Example Option 1"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llOptionB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/game_option_letter_BCD_top_margin"
+        android:layout_marginStart="@dimen/game_option_letter_start_end_margin"
+        android:layout_marginEnd="@dimen/game_option_letter_start_end_margin"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llOptionA"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/game_option_B"
+            android:textColor="@color/black"
+            android:textSize="@dimen/game_option_letter_size" />
+
+        <TextView
+            android:id="@+id/tvGameOptionB"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/game_option_description_size"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/game_option_description_start_margin"
+            tools:text="Example Option 2"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llOptionC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/game_option_letter_BCD_top_margin"
+        android:layout_marginStart="@dimen/game_option_letter_start_end_margin"
+        android:layout_marginEnd="@dimen/game_option_letter_start_end_margin"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llOptionB"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/game_option_C"
+            android:textColor="@color/black"
+            android:textSize="@dimen/game_option_letter_size" />
+
+        <TextView
+            android:id="@+id/tvGameOptionC"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/game_option_description_size"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/game_option_description_start_margin"
+            tools:text="Example Option 3"/>
+    </LinearLayout>
+    <LinearLayout
+        android:id="@+id/llOptionD"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/game_option_letter_BCD_top_margin"
+        android:layout_marginStart="@dimen/game_option_letter_start_end_margin"
+        android:layout_marginEnd="@dimen/game_option_letter_start_end_margin"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llOptionC"
+        android:visibility="invisible"
+        tools:visibility="visible">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/game_option_D"
+            android:textColor="@color/black"
+            android:textSize="@dimen/game_option_letter_size" />
+
+        <TextView
+            android:id="@+id/tvGameOptionD"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textSize="@dimen/game_option_description_size"
+            android:gravity="center_vertical"
+            android:layout_marginStart="@dimen/game_option_description_start_margin"
+            tools:text="Example Option 4"/>
+    </LinearLayout>
 
     <TextView
         android:id="@+id/tvCountdown"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="3"
-        android:visibility="invisible"
+        android:textColor="@color/teal_200"
         android:textSize="400sp"
-        android:textColor="@color/teal_200" />
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="3" />
 
     <TextView
         android:id="@+id/tvDifficultySetting"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="250dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Select a difficulty: "
-        android:textSize="30sp"
-        android:textColor="@color/black"
+        android:layout_marginTop="250dp"
         android:gravity="center"
-        tools:visibility="invisible"/>
+        android:text="Select a difficulty: "
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="invisible" />
 
     <LinearLayout
         android:id="@+id/llDifficultyButtons"
-        app:layout_constraintTop_toBottomOf="@id/tvDifficultySetting"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="10dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:layout_marginTop="10dp"
         android:gravity="center"
+        android:orientation="vertical"
         android:weightSum="3"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvDifficultySetting"
         tools:visibility="invisible">
 
         <Button
             android:id="@+id/btnEasyDifficulty"
-            android:layout_margin="5dp"
             android:layout_width="150dp"
             android:layout_height="0dp"
-            android:text="Easy"
-            android:layout_weight="1" />
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="Easy" />
+
         <Button
             android:id="@+id/btnMediumDifficulty"
-            android:layout_margin="5dp"
             android:layout_width="150dp"
             android:layout_height="0dp"
-            android:text="Med"
-            android:layout_weight="1" />
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="Med" />
+
         <Button
             android:id="@+id/btnHardDifficulty"
-            android:layout_margin="5dp"
             android:layout_width="150dp"
             android:layout_height="0dp"
-            android:text="Hard"
-            android:layout_weight="1" />
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="Hard" />
 
 
     </LinearLayout>
