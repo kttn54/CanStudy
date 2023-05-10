@@ -45,7 +45,7 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvScore"
+        android:id="@+id/tvTestScore"
         app:layout_constraintTop_toBottomOf="@id/llTopButtons"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -59,8 +59,8 @@
         android:text="Score:"/>
 
     <LinearLayout
-        android:id="@+id/llScore"
-        app:layout_constraintTop_toBottomOf="@id/tvScore"
+        android:id="@+id/llTestScore"
+        app:layout_constraintTop_toBottomOf="@id/tvTestScore"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
@@ -69,7 +69,7 @@
         android:gravity="center">
 
         <TextView
-            android:id="@+id/tvLeftScore"
+            android:id="@+id/tvTestLeftScore"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
@@ -85,7 +85,7 @@
             android:textSize="30sp"/>
 
         <TextView
-            android:id="@+id/tvRightScore"
+            android:id="@+id/tvTestRightScore"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_margin="10dp"
@@ -95,8 +95,8 @@
     </LinearLayout>
 
     <TextView
-        android:id="@+id/tvEnglishDescription"
-        app:layout_constraintTop_toBottomOf="@id/llScore"
+        android:id="@+id/tvTestEnglishDescription"
+        app:layout_constraintTop_toBottomOf="@id/llTestScore"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
@@ -108,8 +108,8 @@
         android:text="Translate the following to Canto:"/>
 
     <TextView
-        android:id="@+id/tvEnglishTranslation"
-        app:layout_constraintTop_toBottomOf="@id/tvEnglishDescription"
+        android:id="@+id/tvTestEnglishTranslation"
+        app:layout_constraintTop_toBottomOf="@id/tvTestEnglishDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
@@ -122,8 +122,8 @@
         tools:text="Hello"/>
 
     <TextView
-        android:id="@+id/tvCantoneseDescription"
-        app:layout_constraintTop_toBottomOf="@id/tvEnglishTranslation"
+        android:id="@+id/tvTestCantoneseDescription"
+        app:layout_constraintTop_toBottomOf="@id/tvTestEnglishTranslation"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
@@ -135,8 +135,8 @@
         android:textSize="20sp"/>
 
     <TextView
-        android:id="@+id/tvCantoneseTranslation"
-        app:layout_constraintTop_toBottomOf="@id/tvCantoneseDescription"
+        android:id="@+id/tvTestCantoneseTranslation"
+        app:layout_constraintTop_toBottomOf="@id/tvTestCantoneseDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
@@ -150,7 +150,7 @@
 
     <LinearLayout
         android:id="@+id/llImageButtons"
-        app:layout_constraintTop_toBottomOf="@id/tvCantoneseDescription"
+        app:layout_constraintTop_toBottomOf="@id/tvTestCantoneseDescription"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"

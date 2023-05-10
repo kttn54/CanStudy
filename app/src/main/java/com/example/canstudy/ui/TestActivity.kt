@@ -21,6 +21,10 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
+/**
+ * A class that tests the User English-Cantonese words based on the latest database installed.
+ */
+
 class TestActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityTestBinding
@@ -72,13 +76,13 @@ class TestActivity : AppCompatActivity() {
         btnCheck = binding.btnCheck
         btnReview = binding.btnReview
         btnRestart = binding.btnRestart
-        tvCantoneseDescription = binding.tvCantoneseDescription
-        tvCantoneseTranslation = binding.tvCantoneseTranslation
-        tvEnglishDescription = binding.tvEnglishDescription
-        tvEnglishTranslation = binding.tvEnglishTranslation
+        tvCantoneseDescription = binding.tvTestCantoneseDescription
+        tvCantoneseTranslation = binding.tvTestCantoneseTranslation
+        tvEnglishDescription = binding.tvTestEnglishDescription
+        tvEnglishTranslation = binding.tvTestEnglishTranslation
         tvWordID = binding.tvWordID
-        tvLeftScore = binding.tvLeftScore
-        tvRightScore = binding.tvRightScore
+        tvLeftScore = binding.tvTestLeftScore
+        tvRightScore = binding.tvTestRightScore
 
         tvCantoneseTranslation.visibility = INVISIBLE
         tvCantoneseDescription.visibility = INVISIBLE
@@ -86,6 +90,9 @@ class TestActivity : AppCompatActivity() {
         getWord()
     }
 
+    /**
+     * A function that describes what happens when the user inputs a correct answer.
+     */
     private fun calculateCorrectAnswer() {
         correctScore++
         totalScore++
@@ -96,6 +103,9 @@ class TestActivity : AppCompatActivity() {
         getWord()
     }
 
+    /**
+     * A function that describes what happens when the user inputs a wrong answer.
+     */
     private fun calculateWrongAnswer() {
         totalScore++
         tvRightScore.text = totalScore.toString()
@@ -109,6 +119,9 @@ class TestActivity : AppCompatActivity() {
         getWord()
     }
 
+    /**
+     * A function that displays Cantonese text which is initially invisible.
+     */
     private fun displayCantoneseText() {
         if (tvCantoneseDescription.visibility == INVISIBLE) {
             tvCantoneseDescription.visibility = VISIBLE
@@ -119,12 +132,18 @@ class TestActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that takes the user to the Review activity.
+     */
     private fun goToReviewActivity() {
         val intent = Intent(this, ReviewActivity::class.java)
         intent.putIntegerArrayListExtra("key", wrongWordList)
         startActivity(intent)
     }
 
+    /**
+     * A function that retrieves a randomly selected word from the database that has not yet been tested.
+     */
     private fun getWord() {
         val dao = (application as CanStudyApp).db.wordDao()
         getWordList(dao) { wordList ->
@@ -151,18 +170,27 @@ class TestActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that disables certain UI elements.
+     */
     private fun disableElements() {
         ibTick.isEnabled = false
         ibCross.isEnabled = false
         btnCheck.isEnabled = false
     }
 
+    /**
+     * A function that enables certain UI elements.
+     */
     private fun enableElements() {
         ibTick.isEnabled = true
         ibCross.isEnabled = true
         btnCheck.isEnabled = true
     }
 
+    /**
+     * A function that restarts the score and resets the UI components.
+     */
     private fun restartScore() {
         correctScore = 0
         totalScore = 0
@@ -176,6 +204,10 @@ class TestActivity : AppCompatActivity() {
         tvCantoneseTranslation.visibility = INVISIBLE
     }
 
+    /**
+     * A function that creates the dialog with the option of restarting or going to the review activity
+     * once the user has finished testing with all the available words.
+     */
     private fun addRestartReviewDialog() {
         val restartReviewDialog = Dialog(this)
         val dialogBinding = DialogRestartReviewBinding.inflate(layoutInflater)
@@ -202,6 +234,9 @@ class TestActivity : AppCompatActivity() {
         restartReviewDialog.show()
     }
 
+    /**
+     * A function that gets a word from the database of words.
+     */
     private fun getWordList(wordDao: WordDao, callback: (ArrayList<WordEntity>) -> Unit) {
         val wordList = ArrayList<WordEntity>()
         lifecycleScope.launch {
@@ -212,7 +247,8 @@ class TestActivity : AppCompatActivity() {
                             word.ID,
                             word.CANTO_WORD,
                             word.ENGLISH_WORD,
-                            word.CORRECT_STATUS
+                            word.NEW_STATUS,
+                            word.NUMBER_OF_WORDS
                         )
                         wordList.add(newWord)
                     }
@@ -222,6 +258,9 @@ class TestActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that empties the repeated words array if the activity is finished.
+     */
     override fun onDestroy() {
         super.onDestroy()
         (application as CanStudyApp).db.close()

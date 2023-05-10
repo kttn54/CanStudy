@@ -37,7 +37,6 @@ class SearchActivity : AppCompatActivity() {
     private lateinit var languageSelected: String
     private lateinit var btnAdd: Button
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySearchBinding.inflate(layoutInflater)
@@ -96,6 +95,7 @@ class SearchActivity : AppCompatActivity() {
         dialogBinding.btnYes.setOnClickListener {
             val cantoneseWord = dialogBinding.etAddCantoneseWord.text.toString()
             val englishWord = dialogBinding.etAddEnglishWord.text.toString()
+            val numberOfEnglishWords = englishWord.trim().split("\\s+".toRegex())
             when {
                 dialogBinding.etAddCantoneseWord.text.isNullOrEmpty() -> {
                     Toast.makeText(this, "Please enter a Cantonese word/phrase", Toast.LENGTH_SHORT).show()
@@ -103,7 +103,8 @@ class SearchActivity : AppCompatActivity() {
                 dialogBinding.etAddEnglishWord.text.isNullOrEmpty() -> {
                     Toast.makeText(this, "Please enter a English word/phrase", Toast.LENGTH_SHORT).show()
                 } else -> {
-                    val newWord = WordEntity(0, cantoneseWord, englishWord, true)
+                // TODO: add number_of_words textbox for user to enter, or calculate the number of words yourself
+                    val newWord = WordEntity(0, cantoneseWord, englishWord, 1, numberOfEnglishWords.size)
                     lifecycleScope.launch {
                         // withContext(Dispatchers.IO) suspends the coroutine and switches the execution to a background thread pool provided by the 'Dispatchesr.IO' dispatcher.
                         // This avoids blocking the main thread which could cause the UI to freeze or become unresponsive.
@@ -186,7 +187,8 @@ class SearchActivity : AppCompatActivity() {
                             word.ID,
                             word.CANTO_WORD,
                             word.ENGLISH_WORD,
-                            word.CORRECT_STATUS
+                            word.NEW_STATUS,
+                            word.NUMBER_OF_WORDS
                         )
                         wordList.add(newWord)
                     }
@@ -233,7 +235,8 @@ class SearchActivity : AppCompatActivity() {
                             word.ID,
                             word.CANTO_WORD,
                             word.ENGLISH_WORD,
-                            word.CORRECT_STATUS
+                            word.NEW_STATUS,
+                            word.NUMBER_OF_WORDS
                         )
                         wordList.add(newWord)
                     }

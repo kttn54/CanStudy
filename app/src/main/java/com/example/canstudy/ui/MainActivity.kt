@@ -11,30 +11,30 @@ import com.example.canstudy.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
-    private var binding: ActivityMainBinding? = null
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
-        setContentView(binding?.root)
+        setContentView(binding.root)
 
 
-        binding?.btnTest?.setOnClickListener {
+        binding.btnTest.setOnClickListener {
             val intent = Intent(this@MainActivity, TestActivity::class.java)
             startActivity(intent)
         }
 
-        binding?.btnSearch?.setOnClickListener {
+        binding.btnSearch.setOnClickListener {
             val intent = Intent(this@MainActivity, SearchActivity::class.java)
             startActivity(intent)
         }
 
-        binding?.btnStudy?.setOnClickListener {
+        binding.btnStudy.setOnClickListener {
             val intent = Intent(this@MainActivity, TestActivity::class.java)
             startActivity(intent)
         }
 
-        binding?.btnGame?.setOnClickListener {
+        binding.btnGame.setOnClickListener {
             val intent = Intent(this@MainActivity, GameActivity::class.java)
             startActivity(intent)
         }

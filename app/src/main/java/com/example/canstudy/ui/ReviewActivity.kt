@@ -48,29 +48,6 @@ class ReviewActivity : AppCompatActivity() {
     }
 
     /**
-     * A function that toggles the translation for the English words.
-     */
-    private fun toggleTranslation(toggle: String, dao: WordDao, list: ArrayList<Int>) {
-        if (toggle == "off") {
-            toggleTranslation = "on"
-            setupWordRecyclerView(dao, list, toggleTranslation)
-        } else {
-            toggleTranslation = "off"
-            setupWordRecyclerView(dao, list, toggleTranslation)
-        }
-    }
-
-    /**
-     * A function that shuffles the order of the wrong words.
-     */
-    private fun shuffleWordList(wordList: ArrayList<Int>) {
-        val shuffledWordList: ArrayList<Int> = ArrayList(wordList)
-        shuffledWordList.shuffle()
-        setupWordRecyclerView(dao, shuffledWordList, "off")
-
-    }
-
-    /**
      * A function that initialises the word list and UI components.
      */
     private fun initialiseActivity() {
@@ -96,6 +73,29 @@ class ReviewActivity : AppCompatActivity() {
         } else {
             tvNoWrongWordsFound.visibility = VISIBLE
         }
+    }
+
+    /**
+     * A function that toggles the translation for the English words.
+     */
+    private fun toggleTranslation(toggle: String, dao: WordDao, list: ArrayList<Int>) {
+        if (toggle == "off") {
+            toggleTranslation = "on"
+            setupWordRecyclerView(dao, list, toggleTranslation)
+        } else {
+            toggleTranslation = "off"
+            setupWordRecyclerView(dao, list, toggleTranslation)
+        }
+    }
+
+    /**
+     * A function that shuffles the order of the wrong words.
+     */
+    private fun shuffleWordList(wordList: ArrayList<Int>) {
+        val shuffledWordList: ArrayList<Int> = ArrayList(wordList)
+        shuffledWordList.shuffle()
+        setupWordRecyclerView(dao, shuffledWordList, "off")
+
     }
 
     /**

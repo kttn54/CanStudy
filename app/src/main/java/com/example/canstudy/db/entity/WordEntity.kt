@@ -9,7 +9,8 @@ data class WordEntity(
     val ID: Int,
     val CANTO_WORD: String,
     val ENGLISH_WORD: String,
-    val CORRECT_STATUS: Boolean
+    val NEW_STATUS: Int,
+    val NUMBER_OF_WORDS: Int
 ) {
     fun getId(): Int {
         return ID
@@ -23,10 +24,13 @@ data class WordEntity(
         return ENGLISH_WORD
     }
 
-    fun getCorrectStatus(): Boolean {
-        return CORRECT_STATUS
+    fun getNewStatus(): Int {
+        return NEW_STATUS
     }
 
+    fun getNumberOfWords(): Int {
+        return NUMBER_OF_WORDS
+    }
 }
 
 

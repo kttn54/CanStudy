@@ -9,7 +9,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
 
-@Database(entities = [WordEntity::class], version = 1, exportSchema = true)
+@Database(entities = [WordEntity::class], version = 2, exportSchema = true)
 abstract class WordDatabase: RoomDatabase() {
     abstract fun wordDao(): WordDao
 
@@ -56,7 +56,11 @@ abstract class WordDatabase: RoomDatabase() {
                         context,
                         WordDatabase::class.java,
                         "CantoWords"
-                    ).createFromAsset("database/CantoWords.db").build()
+                    )
+                        .createFromAsset("database/CantoWords_v3.db")
+                        .addMigrations(
+                            migration1to2)
+                        .build()
                     INSTANCE = instance
                 }
                 return instance
