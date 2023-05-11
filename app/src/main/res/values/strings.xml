@@ -1,5 +1,11 @@
 <resources>
     <string name="app_name">CanStudy</string>
+    <string name="main_title">Welcome to CanStudy</string>
+    <string name="main_sub_title">an app that tests your Cantonese</string>
+    <string name="btn_test">Test</string>
+    <string name="btn_TBC">TBC</string>
+    <string name="btn_search">Search</string>
+    <string name="btn_game">Game</string>
     <string name="game_option_A">A</string>
     <string name="game_option_B">B</string>
     <string name="game_option_C">C</string>

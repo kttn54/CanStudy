@@ -21,4 +21,12 @@
     <color name="rgStrokeColour">#9AA2AF</color>
     <color name="rbStateChecked">#FFFFFF</color>
     <color name="rbStateUnchecked">#ADB3BE</color>
+
+    <color name="orange">#FA8334</color>
+    <color name="yellow">#FFFD77</color>
+    <color name="jasmine">#FFE882</color>
+    <color name="blue_munsell">#388697</color>
+    <color name="dark_purple">#271033</color>
+
+
 </resources>

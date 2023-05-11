@@ -1,6 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="main_button">120dp</dimen>
+    <dimen name="main_image_height">250dp</dimen>
+    <dimen name="main_title_margin_top">50dp</dimen>
+    <dimen name="main_title_text_size">25sp</dimen>
+    <dimen name="main_sub_title_margin_top">3dp</dimen>
+    <dimen name="main_sub_title_text_size">14sp</dimen>
+    <dimen name="main_top_btn_row_margin_top">30dp</dimen>
+    <dimen name="main_btn_row_height">100dp</dimen>
+    <dimen name="main_btn_row_padding">20dp</dimen>
     <dimen name="game_option_letter_size">25sp</dimen>
     <dimen name="game_option_description_size">18sp</dimen>
     <dimen name="game_option_letter_A_top_margin">40dp</dimen>

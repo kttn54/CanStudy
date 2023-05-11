@@ -15,6 +15,7 @@ class ScoreActivity : AppCompatActivity() {
 
     private lateinit var btnScoreHome: AppCompatButton
     private lateinit var btnScoreReview: AppCompatButton
+    private lateinit var btnScoreRestart: AppCompatButton
     private lateinit var tvResultLeftScore: TextView
     private lateinit var tvResultRightScore: TextView
     private lateinit var wrongWordList: ArrayList<Int>
@@ -34,11 +35,16 @@ class ScoreActivity : AppCompatActivity() {
             intent.putIntegerArrayListExtra("wrongWordList", wrongWordList)
             startActivity(intent)
         }
+        btnScoreRestart.setOnClickListener {
+            val intent = Intent(this@ScoreActivity, GameDifficultyActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun initialiseActivity() {
         btnScoreHome = binding.btnScoreHome
         btnScoreReview = binding.btnScoreReview
+        btnScoreRestart = binding.btnScoreRestart
         tvResultLeftScore = binding.tvResultLeftScore
         tvResultRightScore = binding.tvResultRightScore
 

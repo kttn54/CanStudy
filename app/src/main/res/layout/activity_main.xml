@@ -9,39 +9,42 @@
 
     <ImageView
         android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="@dimen/main_image_height"
         android:scaleType="fitXY"
         android:src="@drawable/yumcha"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="@dimen/main_title_margin_top"
         android:gravity="center"
-        android:text="Welcome to CanStudy"
-        android:textSize="25sp"
+        android:text="@string/main_title"
+        android:textColor="@color/orange"
+        android:textSize="@dimen/main_title_text_size"
         android:textStyle="bold"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="3dp"
+        android:layout_marginTop="@dimen/main_sub_title_margin_top"
         android:gravity="center"
-        android:text="an app that tests your Cantonese"
-        android:textSize="14sp"/>
+        android:text="@string/main_sub_title"
+        android:textColor="@color/dark_purple"
+        android:textSize="@dimen/main_sub_title_text_size"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_layout_top"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_marginTop="30dp"
-        android:padding="20dp">
+        android:layout_height="@dimen/main_btn_row_height"
+        android:layout_marginTop="@dimen/main_top_btn_row_margin_top"
+        android:padding="@dimen/main_btn_row_padding">
 
         <Button
             android:id="@+id/btn_test"
             android:layout_width="@dimen/main_button"
             android:layout_height="wrap_content"
-            android:text="Test"
+            android:text="@string/btn_test"
+            android:backgroundTint="@color/yellow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_study"
             app:layout_constraintTop_toTopOf="@id/cl_layout_top"
@@ -51,7 +54,8 @@
             android:id="@+id/btn_study"
             android:layout_width="@dimen/main_button"
             android:layout_height="wrap_content"
-            android:text="[TBC]"
+            android:text="@string/btn_TBC"
+            android:backgroundTint="@color/yellow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_test"
             app:layout_constraintTop_toTopOf="@id/cl_layout_top"
@@ -61,14 +65,15 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cl_layout_bottom"
         android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:padding="20dp">
+        android:layout_height="@dimen/main_btn_row_height"
+        android:padding="@dimen/main_btn_row_padding">
 
         <Button
             android:id="@+id/btn_search"
             android:layout_width="@dimen/main_button"
             android:layout_height="wrap_content"
-            android:text="Search"
+            android:text="@string/btn_search"
+            android:backgroundTint="@color/yellow"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@id/btn_game"
             app:layout_constraintTop_toTopOf="@id/cl_layout_bottom"
@@ -78,7 +83,8 @@
             android:id="@+id/btn_game"
             android:layout_width="@dimen/main_button"
             android:layout_height="wrap_content"
-            android:text="Game"
+            android:text="@string/btn_game"
+            android:backgroundTint="@color/yellow"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/btn_search"
             app:layout_constraintTop_toTopOf="@id/cl_layout_bottom"

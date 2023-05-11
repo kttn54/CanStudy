@@ -51,7 +51,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
     private var countdownTimer: CountDownTimer? = null
     private var gameTimer: CountDownTimer? = null
     private var countdownTime = 3
-    private var gameTime = 15
+    private var gameTime = 60
 
     private var score = 0
     private var totalQuestions = 0
@@ -249,11 +249,6 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         } else {
             wrongWordList.add(tvGameWordID.text.toString().toInt())
         }
-
-        Log.e("test", "selectedCantoOption is $selectedCantoOption")
-        Log.e("test", "correctCantoAnswer is $correctCantoAnswer")
-        Log.e("test", "totalQuestions is $totalQuestions")
-        Log.e("test", "score is $score")
 
         getWord()
     }
