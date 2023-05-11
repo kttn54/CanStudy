@@ -146,7 +146,7 @@ class TestActivity : BaseActivity() {
      */
     private fun getWord() {
         val dao = (application as CanStudyApp).db.wordDao()
-        getWordList(dao) { wordList ->
+        getAllWordList(dao) { wordList ->
             // Handle the case where all words have been chosen
             if (repeatedWords.size == wordList.size) {
                 tvCantoneseDescription.visibility = VISIBLE
@@ -154,7 +154,7 @@ class TestActivity : BaseActivity() {
                 addRestartReviewDialog()
                 disableElements()
                 repeatedWords.clear()
-                return@getWordList
+                return@getAllWordList
             }
 
             wordList.shuffle()
