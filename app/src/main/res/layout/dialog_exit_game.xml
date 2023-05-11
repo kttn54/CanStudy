@@ -37,6 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:layout_marginEnd="10dp"
+            android:backgroundTint="@color/red"
             android:text="@string/dialog_yes_button"/>
 
         <Button
@@ -44,6 +45,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:backgroundTint="@color/green"
             android:text="@string/dialog_no_button"/>
     </LinearLayout>
 

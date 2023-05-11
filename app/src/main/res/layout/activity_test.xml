@@ -31,6 +31,7 @@
             android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:backgroundTint="@color/yellow"
             android:text="REVIEW"
             android:layout_weight="1"/>
 
@@ -40,6 +41,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="RESTART"
+            android:backgroundTint="@color/yellow"
             android:layout_weight="1"/>
 
     </LinearLayout>
@@ -190,6 +192,7 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:backgroundTint="@color/yellow"
         android:text="Check"/>
 
     <TextView

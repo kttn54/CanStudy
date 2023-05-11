@@ -24,6 +24,8 @@
 
     <color name="orange">#FA8334</color>
     <color name="yellow">#FFFD77</color>
+    <color name="red">#D21404</color>
+    <color name="green">#03C04A</color>
     <color name="jasmine">#FFE882</color>
     <color name="blue_munsell">#388697</color>
     <color name="dark_purple">#271033</color>

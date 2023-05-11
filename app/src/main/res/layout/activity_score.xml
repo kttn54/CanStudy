@@ -72,6 +72,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="RESTART"
+            android:backgroundTint="@color/yellow"
             android:layout_margin="10dp"/>
 
         <androidx.appcompat.widget.AppCompatButton
@@ -80,6 +81,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="REVIEW"
+            android:backgroundTint="@color/yellow"
             android:layout_margin="10dp"/>
     </LinearLayout>
 
@@ -93,6 +95,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="HOME"
+            android:backgroundTint="@color/yellow"
             android:layout_margin="10dp"/>
     </LinearLayout>
 

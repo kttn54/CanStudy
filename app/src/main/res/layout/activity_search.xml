@@ -98,6 +98,7 @@
             android:layout_margin="10dp"
             android:layout_weight="0.25"
             android:background="@drawable/btn_add"
+            android:backgroundTint="@color/yellow"
             android:text="Add Word"/>
 
     </LinearLayout>
