@@ -57,7 +57,7 @@ abstract class WordDatabase: RoomDatabase() {
                         WordDatabase::class.java,
                         "CantoWords"
                     )
-                        .createFromAsset("database/CantoWords_shortened.db")
+                        .createFromAsset("database/CantoWords_v3.db")
                         .addMigrations(
                             migration1to2)
                         .build()

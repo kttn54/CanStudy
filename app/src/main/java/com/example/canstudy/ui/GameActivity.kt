@@ -14,11 +14,14 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
+import androidx.lifecycle.lifecycleScope
 import com.example.canstudy.CanStudyApp
 import com.example.canstudy.Constants
 import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityGameBinding
 import com.example.canstudy.databinding.DialogExitGameBinding
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.launch
 import org.w3c.dom.Text
 import kotlin.random.Random
 
@@ -43,13 +46,12 @@ class GameActivity : BaseActivity(), View.OnClickListener {
     private lateinit var btnGameOptionC: AppCompatButton
     private lateinit var btnGameOptionD: AppCompatButton
 
-    private var gameState = "PRE-GAME"
     private var difficultySetting = "Easy"
 
     private var countdownTimer: CountDownTimer? = null
     private var gameTimer: CountDownTimer? = null
     private var countdownTime = 3
-    private var gameTime = 10
+    private var gameTime = 15
 
     private var score = 0
     private var totalQuestions = 0
@@ -89,6 +91,9 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         }
 
         binding.toolbarGame.setNavigationOnClickListener { onBackPressed() }
+
+        val intent = intent
+        difficultySetting = intent.getStringExtra("difficultySetting").toString()
 
         tvCountdown = binding.tvCountdown
         tvGameTime = binding.tvGameTime
@@ -161,7 +166,11 @@ class GameActivity : BaseActivity(), View.OnClickListener {
             }
 
             override fun onFinish() {
-                 //mediaPlayer.stop()
+                if (mediaPlayer.isPlaying) {
+                    mediaPlayer.stop()
+                    mediaPlayer.release()
+                }
+
                 val intent = Intent(this@GameActivity, ScoreActivity::class.java)
                 intent.putIntegerArrayListExtra("wrongWordList", wrongWordList)
                 intent.putExtra("score", score)
@@ -183,6 +192,8 @@ class GameActivity : BaseActivity(), View.OnClickListener {
                 startActivity(Intent(this@GameActivity, ScoreActivity::class.java))
             }
 
+            wordList.shuffle()
+
             var wordID: Int
             var selectedList: ArrayList<Int> = ArrayList()
 
@@ -194,29 +205,39 @@ class GameActivity : BaseActivity(), View.OnClickListener {
                         wordID = wordList[randomIndex].ID
                     } while (selectedList.contains(wordID) || repeatedWordList.contains(wordID))
 
-                    selectedList.add(wordID)
-
                     tvGameEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
                     correctCantoAnswer = wordList[randomIndex].getCantoWord()
+                    Log.e("test", "correctCantoAnswer is is ${wordList[randomIndex].getCantoWord()}")
                     repeatedWordList.add(wordID)
                     tvGameWordID.text = wordID.toString()
+
                 } else {
                     do {
                         randomIndex = Random.nextInt(0, wordList.size)
                         wordID = wordList[randomIndex].ID
                     } while (selectedList.contains(wordID))
 
-                    selectedList.add(wordID)
                 }
+                selectedList.add(wordID)
             }
+
+            Log.e("test", "selectedList is $selectedList")
+            Log.e("test", "repeatedWordList is $repeatedWordList")
 
             selectedList.shuffle()
 
-            // TODO: CHANGE THE DATABASE ID NUMBERS TO START FROM 0
-            btnGameOptionA.text = wordList[selectedList[0]].getCantoWord()
+            lifecycleScope.launch {
+                btnGameOptionA.text = dao.readCantoWordById(selectedList[0]).first().getCantoWord()
+                btnGameOptionB.text = dao.readCantoWordById(selectedList[1]).first().getCantoWord()
+                btnGameOptionC.text = dao.readCantoWordById(selectedList[2]).first().getCantoWord()
+                btnGameOptionD.text = dao.readCantoWordById(selectedList[3]).first().getCantoWord()
+            }
+
+
+/*            btnGameOptionA.text = wordList[selectedList[0]].getCantoWord()
             btnGameOptionB.text = wordList[selectedList[1]].getCantoWord()
             btnGameOptionC.text = wordList[selectedList[2]].getCantoWord()
-            btnGameOptionD.text = wordList[selectedList[3]].getCantoWord()
+            btnGameOptionD.text = wordList[selectedList[3]].getCantoWord()  */
         }
     }
 
@@ -253,7 +274,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         customDialog.setCanceledOnTouchOutside(false)
 
         dialogBinding.btnGameDialogYes.setOnClickListener {
-            finish()
+            this@GameActivity.finish()
             customDialog.dismiss()
         }
         dialogBinding.btnGameDialogNo.setOnClickListener {
@@ -266,7 +287,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
      * A function that stops the media player once the activity is destroyed to avoid memory leaks.
      */
     override fun onDestroy() {
-        super.onDestroy()
         //mediaPlayer.release()
+        super.onDestroy()
     }
 }

@@ -1,6 +1,7 @@
 package com.example.canstudy.db.dao
 
 import androidx.room.*
+import com.example.canstudy.db.entity.CantoWordEntity
 import com.example.canstudy.db.entity.WordEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -16,12 +17,6 @@ interface WordDao {
     @Delete
     suspend fun delete(wordEntity: WordEntity)
 
-    @Query("SELECT * FROM `CantoWords`")
-    fun readAll(): Flow<List<WordEntity>>
-
-    @Query("SELECT * FROM `CantoWords` where id=:id")
-    fun readWordById(id:Int):Flow<WordEntity>
-
     /*
     fun readAll(): Flow<List<WordEntity>> declares the function itself.
     It returns a Flow of a List of WordEntity objects, which means that the results of the
@@ -31,5 +26,17 @@ interface WordDao {
     The Flow type is a reactive stream type in Kotlin that is used to represent a
     stream of values that are emitted over time. It allows for asynchronous processing
     and can be used to handle large amounts of data in a memory-efficient manner.
-     */
+    */
+
+    @Query("SELECT * FROM `CantoWords`")
+    fun readAll(): Flow<List<WordEntity>>
+
+    @Query("SELECT * FROM `CantoWords` where id=:id")
+    fun readWordById(id:Int):Flow<WordEntity>
+
+    @Query("SELECT CANTO_WORD FROM `CantoWords` where id=:id")
+    fun readCantoWordById(id:Int):Flow<CantoWordEntity>
+
+    /*@Query("SELECT * FROM `CantoWords` where id=:id")
+    fun readWordById(id:Int):Flow<WordEntity>*/
 }
