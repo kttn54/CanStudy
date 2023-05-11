@@ -232,12 +232,6 @@ class GameActivity : BaseActivity(), View.OnClickListener {
                 btnGameOptionC.text = dao.readCantoWordById(selectedList[2]).first().getCantoWord()
                 btnGameOptionD.text = dao.readCantoWordById(selectedList[3]).first().getCantoWord()
             }
-
-
-/*            btnGameOptionA.text = wordList[selectedList[0]].getCantoWord()
-            btnGameOptionB.text = wordList[selectedList[1]].getCantoWord()
-            btnGameOptionC.text = wordList[selectedList[2]].getCantoWord()
-            btnGameOptionD.text = wordList[selectedList[3]].getCantoWord()  */
         }
     }
 
