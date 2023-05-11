@@ -1,6 +1,7 @@
 package com.example.canstudy.ui
 
 import android.app.Dialog
+import android.content.Intent
 import android.media.MediaPlayer
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -28,25 +29,19 @@ import kotlin.random.Random
 class GameActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var binding : ActivityGameBinding
-    private lateinit var tvDifficultySetting : TextView
     private lateinit var tvCountdown : TextView
     private lateinit var tvGameTime : TextView
-    private lateinit var tvGameScore : TextView
     private lateinit var tvGameEnglishDescription : TextView
     private lateinit var tvGameEnglishTranslation : TextView
     private lateinit var tvGameWordID : TextView
-    private lateinit var btnEasyDifficulty: Button
-    private lateinit var btnMediumDifficulty: Button
-    private lateinit var btnHardDifficulty: Button
-    private lateinit var llGameScore: LinearLayout
     private lateinit var llOptionA: LinearLayout
     private lateinit var llOptionB: LinearLayout
     private lateinit var llOptionC: LinearLayout
     private lateinit var llOptionD: LinearLayout
-    private lateinit var tvGameOptionA: AppCompatButton
-    private lateinit var tvGameOptionB: AppCompatButton
-    private lateinit var tvGameOptionC: AppCompatButton
-    private lateinit var tvGameOptionD: AppCompatButton
+    private lateinit var btnGameOptionA: AppCompatButton
+    private lateinit var btnGameOptionB: AppCompatButton
+    private lateinit var btnGameOptionC: AppCompatButton
+    private lateinit var btnGameOptionD: AppCompatButton
 
     private var gameState = "PRE-GAME"
     private var difficultySetting = "Easy"
@@ -54,10 +49,15 @@ class GameActivity : BaseActivity(), View.OnClickListener {
     private var countdownTimer: CountDownTimer? = null
     private var gameTimer: CountDownTimer? = null
     private var countdownTime = 3
-    private var gameTime = 60
+    private var gameTime = 10
 
+    private var score = 0
+    private var totalQuestions = 0
+
+    private var repeatedWordList = ArrayList<Int>()
     private var wrongWordList = ArrayList<Int>()
     private var randomIndex: Int = Random.nextInt()
+    private var correctCantoAnswer: String = "initialised"
 
     private lateinit var progressBar: ProgressBar
 
@@ -68,11 +68,14 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        val difficultySetting = intent.getStringExtra("difficultySetting")
+
         initialiseActivity()
 
-        btnEasyDifficulty.setOnClickListener(this)
-        btnMediumDifficulty.setOnClickListener(this)
-        btnHardDifficulty.setOnClickListener(this)
+        btnGameOptionA.setOnClickListener(this)
+        btnGameOptionB.setOnClickListener(this)
+        btnGameOptionC.setOnClickListener(this)
+        btnGameOptionD.setOnClickListener(this)
     }
 
     /**
@@ -87,60 +90,30 @@ class GameActivity : BaseActivity(), View.OnClickListener {
 
         binding.toolbarGame.setNavigationOnClickListener { onBackPressed() }
 
-        tvDifficultySetting = binding.tvDifficultySetting
         tvCountdown = binding.tvCountdown
         tvGameTime = binding.tvGameTime
-        tvGameScore = binding.tvGameScore
         tvGameEnglishDescription = binding.tvGameEnglishDescription
         tvGameEnglishTranslation = binding.tvGameEnglishTranslation
         tvGameWordID = binding.tvGameWordID
-        btnEasyDifficulty = binding.btnEasyDifficulty
-        btnMediumDifficulty = binding.btnMediumDifficulty
-        btnHardDifficulty = binding.btnHardDifficulty
-        llGameScore = binding.llGameScore
         llOptionA = binding.llOptionA
         llOptionB = binding.llOptionB
         llOptionC = binding.llOptionC
         llOptionD = binding.llOptionD
-        tvGameOptionA = binding.tvGameOptionA
-        tvGameOptionB = binding.tvGameOptionB
-        tvGameOptionC = binding.tvGameOptionC
-        tvGameOptionD = binding.tvGameOptionD
+        btnGameOptionA = binding.btnGameOptionA
+        btnGameOptionB = binding.btnGameOptionB
+        btnGameOptionC = binding.btnGameOptionC
+        btnGameOptionD = binding.btnGameOptionD
 
         progressBar = binding.progressBarGame
         mediaPlayer = MediaPlayer.create(this@GameActivity, R.raw.yummy_dim_sum)
-    }
 
-    /**
-     * A function that describes how each button should react when they are clicked.
-     */
-    override fun onClick(view: View?) {
-        if (gameState == "PRE-GAME") {
-            var button = view as Button
-
-            if (button.text.toString() == "Easy") {
-                difficultySetting = Constants.EASY_DIFFICULTY
-            } else if (button.text.toString() == "Med") {
-                difficultySetting = Constants.MEDIUM_DIFFICULTY
-            } else {
-                difficultySetting = Constants.HARD_DIFFICULTY
-            }
-            gameState = "MID-GAME"
-            setupGame()
-        } else {
-            var textView = view as TextView
-        }
-
+        setupGame()
     }
 
     /**
      * A function that shows the countdown before the game starts.
      */
     private fun setupGame() {
-        tvDifficultySetting.visibility = View.GONE
-        btnEasyDifficulty.visibility = View.GONE
-        btnMediumDifficulty.visibility = View.GONE
-        btnHardDifficulty.visibility = View.GONE
         tvCountdown.visibility = View.VISIBLE
 
         countdownTimer = object : CountDownTimer((countdownTime * 1000).toLong(), 1000) {
@@ -164,18 +137,16 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         binding.toolbarGame.title = "Game - $difficultySetting"
         progressBar.visibility = View.VISIBLE
         tvGameTime.visibility = View.VISIBLE
-        tvGameScore.visibility = View.VISIBLE
         tvGameEnglishDescription.visibility = View.VISIBLE
         tvGameEnglishTranslation.visibility = View.VISIBLE
-        llGameScore.visibility = View.VISIBLE
         llOptionA.visibility = View.VISIBLE
         llOptionB.visibility = View.VISIBLE
         llOptionC.visibility = View.VISIBLE
         llOptionD.visibility = View.VISIBLE
-        tvGameOptionA.visibility = View.VISIBLE
-        tvGameOptionB.visibility = View.VISIBLE
-        tvGameOptionC.visibility = View.VISIBLE
-        tvGameOptionD.visibility = View.VISIBLE
+        btnGameOptionA.visibility = View.VISIBLE
+        btnGameOptionB.visibility = View.VISIBLE
+        btnGameOptionC.visibility = View.VISIBLE
+        btnGameOptionD.visibility = View.VISIBLE
 
         progressBar.max = 60
         var currentTime = 60
@@ -191,6 +162,11 @@ class GameActivity : BaseActivity(), View.OnClickListener {
 
             override fun onFinish() {
                  //mediaPlayer.stop()
+                val intent = Intent(this@GameActivity, ScoreActivity::class.java)
+                intent.putIntegerArrayListExtra("wrongWordList", wrongWordList)
+                intent.putExtra("score", score)
+                intent.putExtra("totalQuestions", totalQuestions)
+                startActivity(intent)
             }
         }.start()
     }
@@ -201,35 +177,70 @@ class GameActivity : BaseActivity(), View.OnClickListener {
     private fun getWord() {
         val dao = (application as CanStudyApp).db.wordDao()
         getWordList(dao) { wordList ->
-            wordList.shuffle()
+            // Handle the case where all words have been chosen
+            if (repeatedWordList.size == wordList.size) {
+                repeatedWordList.clear()
+                startActivity(Intent(this@GameActivity, ScoreActivity::class.java))
+            }
 
             var wordID: Int
             var selectedList: ArrayList<Int> = ArrayList()
 
             // Get four random words
             for (i in 1..4) {
-                do {
-                    randomIndex = Random.nextInt(0, wordList.size)
-                    wordID = wordList[randomIndex].ID
-                } while (selectedList.contains(wordID))
-
-                selectedList.add(wordID)
-
                 if (i == 1) {
+                    do {
+                        randomIndex = Random.nextInt(0, wordList.size)
+                        wordID = wordList[randomIndex].ID
+                    } while (selectedList.contains(wordID) || repeatedWordList.contains(wordID))
+
+                    selectedList.add(wordID)
+
                     tvGameEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
+                    correctCantoAnswer = wordList[randomIndex].getCantoWord()
+                    repeatedWordList.add(wordID)
+                    tvGameWordID.text = wordID.toString()
+                } else {
+                    do {
+                        randomIndex = Random.nextInt(0, wordList.size)
+                        wordID = wordList[randomIndex].ID
+                    } while (selectedList.contains(wordID))
+
+                    selectedList.add(wordID)
                 }
             }
 
             selectedList.shuffle()
 
             // TODO: CHANGE THE DATABASE ID NUMBERS TO START FROM 0
-            tvGameOptionA.text = wordList[selectedList[0]].getCantoWord()
-            tvGameOptionB.text = wordList[selectedList[1]].getCantoWord()
-            tvGameOptionC.text = wordList[selectedList[2]].getCantoWord()
-            tvGameOptionD.text = wordList[selectedList[3]].getCantoWord()
-
-            // tvGameWordID.text = wordID.toString()
+            btnGameOptionA.text = wordList[selectedList[0]].getCantoWord()
+            btnGameOptionB.text = wordList[selectedList[1]].getCantoWord()
+            btnGameOptionC.text = wordList[selectedList[2]].getCantoWord()
+            btnGameOptionD.text = wordList[selectedList[3]].getCantoWord()
         }
+    }
+
+    /**
+     * A function that describes how each option button should react when they are clicked.
+     */
+    override fun onClick(view: View?) {
+        totalQuestions++
+
+        val button = view as Button
+        val selectedCantoOption = button.text.toString()
+
+        if (selectedCantoOption == correctCantoAnswer) {
+            score++
+        } else {
+            wrongWordList.add(tvGameWordID.text.toString().toInt())
+        }
+
+        Log.e("test", "selectedCantoOption is $selectedCantoOption")
+        Log.e("test", "correctCantoAnswer is $correctCantoAnswer")
+        Log.e("test", "totalQuestions is $totalQuestions")
+        Log.e("test", "score is $score")
+
+        getWord()
     }
 
     /**
@@ -242,7 +253,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         customDialog.setCanceledOnTouchOutside(false)
 
         dialogBinding.btnGameDialogYes.setOnClickListener {
-            this@GameActivity.finish()
+            finish()
             customDialog.dismiss()
         }
         dialogBinding.btnGameDialogNo.setOnClickListener {
@@ -256,6 +267,6 @@ class GameActivity : BaseActivity(), View.OnClickListener {
      */
     override fun onDestroy() {
         super.onDestroy()
-        mediaPlayer.release()
+        //mediaPlayer.release()
     }
 }

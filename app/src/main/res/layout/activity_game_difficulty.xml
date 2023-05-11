@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.GameDifficultyActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarGame"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        />
+
+    <TextView
+        android:id="@+id/tvDifficultySetting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="200dp"
+        android:gravity="center"
+        android:text="Select a difficulty: "
+        android:textColor="@color/black"
+        android:textSize="30sp"
+        />
+
+    <LinearLayout
+        android:id="@+id/llDifficultyButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:weightSum="3"
+        >
+
+        <Button
+            android:id="@+id/btnEasyDifficulty"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="Easy" />
+
+        <Button
+            android:id="@+id/btnMediumDifficulty"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="Med" />
+
+        <Button
+            android:id="@+id/btnHardDifficulty"
+            android:layout_width="150dp"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:text="Hard" />
+
+
+    </LinearLayout>
+</LinearLayout>

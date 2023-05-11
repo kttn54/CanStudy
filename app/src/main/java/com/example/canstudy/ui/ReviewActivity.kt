@@ -66,7 +66,7 @@ class ReviewActivity : AppCompatActivity() {
         toggleTranslation = "off"
 
         val intent = intent
-        wrongWordList = intent.getIntegerArrayListExtra("key") as ArrayList<Int>
+        wrongWordList = intent.getIntegerArrayListExtra("wrongWordList") as ArrayList<Int>
         dao = (application as CanStudyApp).db.wordDao()
         if (!wrongWordList.isNullOrEmpty()) {
             setupWordRecyclerView(dao, wrongWordList, toggleTranslation)

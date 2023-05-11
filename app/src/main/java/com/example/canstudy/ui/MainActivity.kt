@@ -35,7 +35,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnGame.setOnClickListener {
-            val intent = Intent(this@MainActivity, GameActivity::class.java)
+            val intent = Intent(this@MainActivity, GameDifficultyActivity::class.java)
             startActivity(intent)
         }
     }

@@ -1,9 +1,11 @@
 package com.example.canstudy.ui
 
+import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.lifecycle.lifecycleScope
 import com.example.canstudy.R
+import com.example.canstudy.databinding.DialogExitGameBinding
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
 import kotlinx.coroutines.flow.collect

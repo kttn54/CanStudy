@@ -232,7 +232,7 @@ class TestActivity : BaseActivity() {
         }
         dialogBinding.btnReview.setOnClickListener {
             val intent = Intent(this, ReviewActivity::class.java)
-            intent.putIntegerArrayListExtra("key", wrongWordList)
+            intent.putIntegerArrayListExtra("wrongWordList", wrongWordList)
             startActivity(intent)
         }
 

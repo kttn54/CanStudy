@@ -15,7 +15,13 @@
         android:theme="@style/Theme.CanStudy"
         tools:targetApi="31">
         <activity
-            android:name=".BaseActivity"
+            android:name=".ui.ScoreActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.GameDifficultyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.BaseActivity"
             android:exported="false" />
         <activity
             android:name=".ui.GameActivity"
