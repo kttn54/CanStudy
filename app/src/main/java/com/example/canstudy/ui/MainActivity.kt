@@ -9,6 +9,7 @@ import com.example.canstudy.databinding.ActivityMainBinding
  * A class that adds functionality to four buttons, which takes the user to different activities.
  */
 
+
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
