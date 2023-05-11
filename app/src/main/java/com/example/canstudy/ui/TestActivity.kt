@@ -25,7 +25,7 @@ import kotlin.random.Random
  * A class that tests the User English-Cantonese words based on the latest database installed.
  */
 
-class TestActivity : AppCompatActivity() {
+class TestActivity : BaseActivity() {
 
     private lateinit var binding: ActivityTestBinding
     private lateinit var ibTick: ImageButton
@@ -37,7 +37,7 @@ class TestActivity : AppCompatActivity() {
     private lateinit var tvCantoneseTranslation: TextView
     private lateinit var tvEnglishDescription: TextView
     private lateinit var tvEnglishTranslation: TextView
-    private lateinit var tvWordID: TextView
+    private lateinit var tvTestWordID: TextView
     private lateinit var tvLeftScore: TextView
     private lateinit var tvRightScore: TextView
     private var correctScore = 0
@@ -80,7 +80,7 @@ class TestActivity : AppCompatActivity() {
         tvCantoneseTranslation = binding.tvTestCantoneseTranslation
         tvEnglishDescription = binding.tvTestEnglishDescription
         tvEnglishTranslation = binding.tvTestEnglishTranslation
-        tvWordID = binding.tvWordID
+        tvTestWordID = binding.tvTestWordID
         tvLeftScore = binding.tvTestLeftScore
         tvRightScore = binding.tvTestRightScore
 
@@ -112,7 +112,7 @@ class TestActivity : AppCompatActivity() {
         tvCantoneseDescription.visibility = INVISIBLE
         tvCantoneseTranslation.visibility = INVISIBLE
 
-        val tvWrongWordID = tvWordID.text.toString()
+        val tvWrongWordID = tvTestWordID.text.toString()
         val IDNumber = tvWrongWordID.toInt()
         wrongWordList.add(IDNumber)
 
@@ -159,14 +159,19 @@ class TestActivity : AppCompatActivity() {
 
             wordList.shuffle()
 
+            var wordID: Int
+
             do {
                 randomIndex = Random.nextInt(0, wordList.size)
-            } while (repeatedWords.contains(randomIndex))
+                wordID = wordList[randomIndex].ID
+            } while (repeatedWords.contains(wordID))
+
+            Log.e("Hello","$repeatedWords")
 
             tvEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
             tvCantoneseTranslation.text = wordList[randomIndex].getCantoWord()
-            tvWordID.text = wordList[randomIndex].getId().toString()
-            repeatedWords.add(randomIndex)
+            tvTestWordID.text = wordID.toString()
+            repeatedWords.add(wordID)
         }
     }
 
@@ -232,30 +237,6 @@ class TestActivity : AppCompatActivity() {
         }
 
         restartReviewDialog.show()
-    }
-
-    /**
-     * A function that gets a word from the database of words.
-     */
-    private fun getWordList(wordDao: WordDao, callback: (ArrayList<WordEntity>) -> Unit) {
-        val wordList = ArrayList<WordEntity>()
-        lifecycleScope.launch {
-            wordDao.readAll().collect { allWordsList ->
-                if (allWordsList.isNotEmpty()) {
-                    for (word in allWordsList) {
-                        val newWord = WordEntity(
-                            word.ID,
-                            word.CANTO_WORD,
-                            word.ENGLISH_WORD,
-                            word.NEW_STATUS,
-                            word.NUMBER_OF_WORDS
-                        )
-                        wordList.add(newWord)
-                    }
-                    callback(wordList)
-                }
-            }
-        }
     }
 
     /**

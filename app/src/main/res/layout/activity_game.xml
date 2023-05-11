@@ -132,7 +132,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvGameEnglishTranslation"
-        android:visibility="invisible"
+        android:visibility="gone"
         tools:visibility="visible">
 
         <TextView
@@ -142,14 +142,15 @@
             android:textColor="@color/black"
             android:textSize="@dimen/game_option_letter_size" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/tvGameOptionA"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/game_option_description_size"
             android:gravity="center_vertical"
             android:layout_marginStart="@dimen/game_option_description_start_margin"
-            tools:text="Example Option 1"/>
+            tools:text="Example Option 1" />
+
     </LinearLayout>
     <LinearLayout
         android:id="@+id/llOptionB"
@@ -162,7 +163,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llOptionA"
-        android:visibility="invisible"
+        android:visibility="gone"
         tools:visibility="visible">
 
         <TextView
@@ -172,14 +173,14 @@
             android:textColor="@color/black"
             android:textSize="@dimen/game_option_letter_size" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/tvGameOptionB"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/game_option_description_size"
             android:gravity="center_vertical"
             android:layout_marginStart="@dimen/game_option_description_start_margin"
-            tools:text="Example Option 2"/>
+            tools:text="Example Option 2" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/llOptionC"
@@ -192,7 +193,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llOptionB"
-        android:visibility="invisible"
+        android:visibility="gone"
         tools:visibility="visible">
 
         <TextView
@@ -202,14 +203,14 @@
             android:textColor="@color/black"
             android:textSize="@dimen/game_option_letter_size" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/tvGameOptionC"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/game_option_description_size"
             android:gravity="center_vertical"
             android:layout_marginStart="@dimen/game_option_description_start_margin"
-            tools:text="Example Option 3"/>
+            tools:text="Example Option 3" />
     </LinearLayout>
     <LinearLayout
         android:id="@+id/llOptionD"
@@ -222,7 +223,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llOptionC"
-        android:visibility="invisible"
+        android:visibility="gone"
         tools:visibility="visible">
 
         <TextView
@@ -232,15 +233,24 @@
             android:textColor="@color/black"
             android:textSize="@dimen/game_option_letter_size" />
 
-        <TextView
+        <androidx.appcompat.widget.AppCompatButton
             android:id="@+id/tvGameOptionD"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:textSize="@dimen/game_option_description_size"
             android:gravity="center_vertical"
             android:layout_marginStart="@dimen/game_option_description_start_margin"
-            tools:text="Example Option 4"/>
+            tools:text="Example Option 4" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvGameWordID"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/llOptionD"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="invisible"/>
 
     <TextView
         android:id="@+id/tvCountdown"

@@ -6,17 +6,26 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.MediaStore
+import android.util.Log
 import android.view.View
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatButton
+import com.example.canstudy.CanStudyApp
 import com.example.canstudy.Constants
 import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityGameBinding
 import com.example.canstudy.databinding.DialogExitGameBinding
+import org.w3c.dom.Text
+import kotlin.random.Random
 
-class GameActivity : AppCompatActivity(), View.OnClickListener {
+/**
+ * A class that adds the Game functionality, allowing users to test themselves in 60 seconds.
+ */
+
+class GameActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var binding : ActivityGameBinding
     private lateinit var tvDifficultySetting : TextView
@@ -24,6 +33,8 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var tvGameTime : TextView
     private lateinit var tvGameScore : TextView
     private lateinit var tvGameEnglishDescription : TextView
+    private lateinit var tvGameEnglishTranslation : TextView
+    private lateinit var tvGameWordID : TextView
     private lateinit var btnEasyDifficulty: Button
     private lateinit var btnMediumDifficulty: Button
     private lateinit var btnHardDifficulty: Button
@@ -32,13 +43,21 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var llOptionB: LinearLayout
     private lateinit var llOptionC: LinearLayout
     private lateinit var llOptionD: LinearLayout
+    private lateinit var tvGameOptionA: AppCompatButton
+    private lateinit var tvGameOptionB: AppCompatButton
+    private lateinit var tvGameOptionC: AppCompatButton
+    private lateinit var tvGameOptionD: AppCompatButton
 
+    private var gameState = "PRE-GAME"
     private var difficultySetting = "Easy"
 
     private var countdownTimer: CountDownTimer? = null
     private var gameTimer: CountDownTimer? = null
     private var countdownTime = 3
     private var gameTime = 60
+
+    private var wrongWordList = ArrayList<Int>()
+    private var randomIndex: Int = Random.nextInt()
 
     private lateinit var progressBar: ProgressBar
 
@@ -56,6 +75,9 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         btnHardDifficulty.setOnClickListener(this)
     }
 
+    /**
+     * A function that initialises the UI components.
+     */
     private fun initialiseActivity() {
         setSupportActionBar(binding.toolbarGame)
         if(supportActionBar != null) {
@@ -63,7 +85,6 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
             supportActionBar?.title = "Game"
         }
 
-        //TODO: add a dialog box saying "are you sure you want to exit while the game is playing"
         binding.toolbarGame.setNavigationOnClickListener { onBackPressed() }
 
         tvDifficultySetting = binding.tvDifficultySetting
@@ -71,6 +92,8 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         tvGameTime = binding.tvGameTime
         tvGameScore = binding.tvGameScore
         tvGameEnglishDescription = binding.tvGameEnglishDescription
+        tvGameEnglishTranslation = binding.tvGameEnglishTranslation
+        tvGameWordID = binding.tvGameWordID
         btnEasyDifficulty = binding.btnEasyDifficulty
         btnMediumDifficulty = binding.btnMediumDifficulty
         btnHardDifficulty = binding.btnHardDifficulty
@@ -79,25 +102,40 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         llOptionB = binding.llOptionB
         llOptionC = binding.llOptionC
         llOptionD = binding.llOptionD
+        tvGameOptionA = binding.tvGameOptionA
+        tvGameOptionB = binding.tvGameOptionB
+        tvGameOptionC = binding.tvGameOptionC
+        tvGameOptionD = binding.tvGameOptionD
 
         progressBar = binding.progressBarGame
         mediaPlayer = MediaPlayer.create(this@GameActivity, R.raw.yummy_dim_sum)
     }
 
+    /**
+     * A function that describes how each button should react when they are clicked.
+     */
     override fun onClick(view: View?) {
-        var button = view as Button
+        if (gameState == "PRE-GAME") {
+            var button = view as Button
 
-        if (button.text.toString() == "Easy") {
-            difficultySetting = Constants.EASY_DIFFICULTY
-        } else if (button.text.toString() == "Med") {
-            difficultySetting = Constants.MEDIUM_DIFFICULTY
+            if (button.text.toString() == "Easy") {
+                difficultySetting = Constants.EASY_DIFFICULTY
+            } else if (button.text.toString() == "Med") {
+                difficultySetting = Constants.MEDIUM_DIFFICULTY
+            } else {
+                difficultySetting = Constants.HARD_DIFFICULTY
+            }
+            gameState = "MID-GAME"
+            setupGame()
         } else {
-            difficultySetting = Constants.HARD_DIFFICULTY
+            var textView = view as TextView
         }
 
-        setupGame()
     }
 
+    /**
+     * A function that shows the countdown before the game starts.
+     */
     private fun setupGame() {
         tvDifficultySetting.visibility = View.GONE
         btnEasyDifficulty.visibility = View.GONE
@@ -118,21 +156,31 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         }.start()
     }
 
+    /**
+     * A function that starts the game once the countdown has finished.
+     */
     private fun startGame() {
-        // mediaPlayer.start()
+        //mediaPlayer.start()
         binding.toolbarGame.title = "Game - $difficultySetting"
         progressBar.visibility = View.VISIBLE
         tvGameTime.visibility = View.VISIBLE
         tvGameScore.visibility = View.VISIBLE
         tvGameEnglishDescription.visibility = View.VISIBLE
+        tvGameEnglishTranslation.visibility = View.VISIBLE
         llGameScore.visibility = View.VISIBLE
         llOptionA.visibility = View.VISIBLE
         llOptionB.visibility = View.VISIBLE
         llOptionC.visibility = View.VISIBLE
         llOptionD.visibility = View.VISIBLE
+        tvGameOptionA.visibility = View.VISIBLE
+        tvGameOptionB.visibility = View.VISIBLE
+        tvGameOptionC.visibility = View.VISIBLE
+        tvGameOptionD.visibility = View.VISIBLE
 
         progressBar.max = 60
         var currentTime = 60
+
+        getWord()
 
         gameTimer = object : CountDownTimer((gameTime * 1000).toLong(), 1000) {
             override fun onTick(p0: Long) {
@@ -142,13 +190,53 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
             }
 
             override fun onFinish() {
-                 // mediaPlayer.stop()
+                 //mediaPlayer.stop()
             }
         }.start()
     }
 
+    /**
+     * A function that retrieves a randomly selected word from the database that has not yet been tested.
+     */
+    private fun getWord() {
+        val dao = (application as CanStudyApp).db.wordDao()
+        getWordList(dao) { wordList ->
+            wordList.shuffle()
+
+            var wordID: Int
+            var selectedList: ArrayList<Int> = ArrayList()
+
+            // Get four random words
+            for (i in 1..4) {
+                do {
+                    randomIndex = Random.nextInt(0, wordList.size)
+                    wordID = wordList[randomIndex].ID
+                } while (selectedList.contains(wordID))
+
+                selectedList.add(wordID)
+
+                if (i == 1) {
+                    tvGameEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
+                }
+            }
+
+            selectedList.shuffle()
+
+            // TODO: CHANGE THE DATABASE ID NUMBERS TO START FROM 0
+            tvGameOptionA.text = wordList[selectedList[0]].getCantoWord()
+            tvGameOptionB.text = wordList[selectedList[1]].getCantoWord()
+            tvGameOptionC.text = wordList[selectedList[2]].getCantoWord()
+            tvGameOptionD.text = wordList[selectedList[3]].getCantoWord()
+
+            // tvGameWordID.text = wordID.toString()
+        }
+    }
+
+    /**
+     * A function that displays a dialog box if the user wants to exit the Game activity.
+     */
     override fun onBackPressed() {
-        var customDialog = Dialog(this)
+        val customDialog = Dialog(this)
         val dialogBinding = DialogExitGameBinding.inflate(layoutInflater)
         customDialog.setContentView(dialogBinding.root)
         customDialog.setCanceledOnTouchOutside(false)
@@ -163,6 +251,9 @@ class GameActivity : AppCompatActivity(), View.OnClickListener {
         customDialog.show()
     }
 
+    /**
+     * A function that stops the media player once the activity is destroyed to avoid memory leaks.
+     */
     override fun onDestroy() {
         super.onDestroy()
         mediaPlayer.release()
