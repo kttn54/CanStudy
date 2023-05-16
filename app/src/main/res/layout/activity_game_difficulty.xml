@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -11,56 +11,128 @@
         android:id="@+id/toolbarGame"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        />
-
-    <TextView
-        android:id="@+id/tvDifficultySetting"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="200dp"
-        android:gravity="center"
-        android:text="Select a difficulty: "
-        android:textColor="@color/black"
-        android:textSize="30sp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         />
 
     <LinearLayout
-        android:id="@+id/llDifficultyButtons"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="10dp"
-        android:gravity="center"
         android:orientation="vertical"
-        android:weightSum="3"
+        app:layout_constraintTop_toBottomOf="@id/toolbarGame"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         >
 
-        <Button
-            android:id="@+id/btnEasyDifficulty"
-            android:layout_width="150dp"
-            android:layout_height="0dp"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/yellow"
-            android:text="Easy" />
+        <TextView
+            android:id="@+id/tvDifficultySetting"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:gravity="center"
+            android:text="Select a difficulty: "
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            android:visibility="gone"
+            />
 
-        <Button
-            android:id="@+id/btnMediumDifficulty"
-            android:layout_width="150dp"
-            android:layout_height="0dp"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/orange"
-            android:text="Med" />
+        <LinearLayout
+            android:id="@+id/llDifficultyButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="3"
+            android:visibility="gone"
+            >
 
-        <Button
-            android:id="@+id/btnHardDifficulty"
-            android:layout_width="150dp"
-            android:layout_height="0dp"
-            android:layout_margin="5dp"
-            android:layout_weight="1"
-            android:backgroundTint="@color/red"
-            android:text="Hard" />
+            <Button
+                android:id="@+id/btnEasyDifficulty"
+                android:layout_width="150dp"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/yellow"
+                android:text="Easy" />
 
+            <Button
+                android:id="@+id/btnMediumDifficulty"
+                android:layout_width="150dp"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/orange"
+                android:text="Med" />
 
+            <Button
+                android:id="@+id/btnHardDifficulty"
+                android:layout_width="150dp"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/red"
+                android:text="Hard" />
+        </LinearLayout>
     </LinearLayout>
-</LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/toolbarGame"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        >
+
+        <TextView
+            android:id="@+id/tv_game_time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="200dp"
+            android:gravity="center"
+            android:text="Select the game time: "
+            android:textColor="@color/black"
+            android:textSize="30sp"
+            />
+
+        <LinearLayout
+            android:id="@+id/llTimeButtons"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="3"
+            >
+
+            <Button
+                android:id="@+id/btnFifteenSeconds"
+                android:layout_width="150dp"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/yellow"
+                android:text="15 seconds" />
+
+            <Button
+                android:id="@+id/btnThirtySeconds"
+                android:layout_width="150dp"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/orange"
+                android:text="30 seconds" />
+
+            <Button
+                android:id="@+id/btnSixtySeconds"
+                android:layout_width="150dp"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:layout_weight="1"
+                android:backgroundTint="@color/red"
+                android:text="60 seconds" />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

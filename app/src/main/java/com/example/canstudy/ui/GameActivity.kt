@@ -56,7 +56,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
     private var countdownTimer: CountDownTimer? = null
     private var gameTimer: CountDownTimer? = null
     private var countdownTime = 3
-    private var gameTime = 15
+    private var gameTime = 60
 
     private var score = 0
     private var totalQuestions = 0
@@ -98,6 +98,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
 
         val intent = intent
         difficultySetting = intent.getStringExtra("difficultySetting").toString()
+        gameTime = intent.getIntExtra("gameTime", 0)
 
         tvCountdown = binding.tvCountdown
         tvGameTime = binding.tvGameTime
@@ -143,7 +144,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
      */
     private fun startGame() {
         //mediaPlayer.start()
-        binding.toolbarGame.title = "Game - $difficultySetting"
+        binding.toolbarGame.title = "Game - $difficultySetting - $gameTime"
         progressBar.visibility = View.VISIBLE
         tvGameTime.visibility = View.VISIBLE
         tvGameEnglishDescription.visibility = View.VISIBLE
@@ -157,8 +158,8 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         btnGameOptionC.visibility = View.VISIBLE
         btnGameOptionD.visibility = View.VISIBLE
 
-        progressBar.max = 60
-        var currentTime = 60
+        progressBar.max = gameTime
+        var currentTime = gameTime
 
         getWord()
 
