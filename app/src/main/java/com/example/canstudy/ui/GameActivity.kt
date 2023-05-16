@@ -69,7 +69,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var progressBar: ProgressBar
 
-    private lateinit var mediaPlayer: MediaPlayer
+    //private lateinit var mediaPlayer: MediaPlayer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -114,7 +114,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         btnGameOptionD = binding.btnGameOptionD
 
         progressBar = binding.progressBarGame
-        mediaPlayer = MediaPlayer.create(this@GameActivity, R.raw.yummy_dim_sum)
+        //mediaPlayer = MediaPlayer.create(this@GameActivity, R.raw.yummy_dim_sum)
 
         setupGame()
     }
@@ -170,10 +170,12 @@ class GameActivity : BaseActivity(), View.OnClickListener {
             }
 
             override fun onFinish() {
+                /*
                 if (mediaPlayer.isPlaying) {
                     mediaPlayer.stop()
                     mediaPlayer.release()
                 }
+                */
 
                 val intent = Intent(this@GameActivity, ScoreActivity::class.java)
                 intent.putIntegerArrayListExtra("wrongWordList", wrongWordList)

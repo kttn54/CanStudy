@@ -120,8 +120,6 @@ class ReviewActivity : AppCompatActivity() {
         val swipeHandler = object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
-                Log.e("removed", "word removed in RV is ${wrongWordEntityList[position]}")
-                //Log.e("removed", "word removed in list is ${wrongWordList[position]}")
                 wrongWordEntityList.removeAt(position)
                 wrongWordList.removeAt(position)
                 rvReview.adapter?.notifyItemRemoved(position)
