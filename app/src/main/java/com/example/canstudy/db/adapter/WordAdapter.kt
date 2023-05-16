@@ -19,10 +19,7 @@ class WordAdapter(private var wordList: ArrayList<WordEntity>): RecyclerView.Ada
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemWordRowBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
+            ItemWordRowBinding.inflate(LayoutInflater.from(parent.context), parent, false
             )
         )
     }

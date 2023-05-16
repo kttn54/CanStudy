@@ -137,7 +137,7 @@ class TestActivity : BaseActivity() {
      */
     private fun goToReviewActivity() {
         val intent = Intent(this, ReviewActivity::class.java)
-        intent.putIntegerArrayListExtra("key", wrongWordList)
+        intent.putIntegerArrayListExtra("wrongWordList", wrongWordList)
         startActivity(intent)
     }
 
@@ -156,7 +156,6 @@ class TestActivity : BaseActivity() {
                 repeatedWords.clear()
                 return@getAllWordList
             }
-
             wordList.shuffle()
 
             var wordID: Int
@@ -165,8 +164,6 @@ class TestActivity : BaseActivity() {
                 randomIndex = Random.nextInt(0, wordList.size)
                 wordID = wordList[randomIndex].ID
             } while (repeatedWords.contains(wordID))
-
-            Log.e("Hello","$repeatedWords")
 
             tvEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
             tvCantoneseTranslation.text = wordList[randomIndex].getCantoWord()

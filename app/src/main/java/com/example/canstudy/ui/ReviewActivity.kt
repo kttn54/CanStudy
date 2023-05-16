@@ -66,8 +66,10 @@ class ReviewActivity : AppCompatActivity() {
         toggleTranslation = "off"
 
         val intent = intent
-        wrongWordList = intent.getIntegerArrayListExtra("wrongWordList") as ArrayList<Int>
+        wrongWordList = intent.getIntegerArrayListExtra("wrongWordList") as? ArrayList<Int> ?: ArrayList()
+
         dao = (application as CanStudyApp).db.wordDao()
+
         if (!wrongWordList.isNullOrEmpty()) {
             setupWordRecyclerView(dao, wrongWordList, toggleTranslation)
         } else {
@@ -103,21 +105,24 @@ class ReviewActivity : AppCompatActivity() {
      */
     private fun setupWordRecyclerView(wordDao: WordDao, wrongWordIDList: ArrayList<Int>, toggleTranslation: String) {
         val wrongWordIDList = wrongWordIDList
-        val wrongWordList = ArrayList<WordEntity>()
+        val wrongWordEntityList = ArrayList<WordEntity>()
         lifecycleScope.launch {
             binding.rvReview.layoutManager = LinearLayoutManager(this@ReviewActivity)
             // first() collects the first result from the query. This converts the query from a
             // Flow<WordEntity> to a WordEntity type.
             for (id in wrongWordIDList) {
                 val newWord = wordDao.readWordById(id).first()
-                wrongWordList.add(newWord)
+                wrongWordEntityList.add(newWord)
             }
-            attachAdapter(wrongWordList, toggleTranslation)
+            attachAdapter(wrongWordEntityList, toggleTranslation)
         }
 
         val swipeHandler = object : SwipeToDeleteCallback() {
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val position = viewHolder.adapterPosition
+                Log.e("removed", "word removed in RV is ${wrongWordEntityList[position]}")
+                //Log.e("removed", "word removed in list is ${wrongWordList[position]}")
+                wrongWordEntityList.removeAt(position)
                 wrongWordList.removeAt(position)
                 rvReview.adapter?.notifyItemRemoved(position)
             }

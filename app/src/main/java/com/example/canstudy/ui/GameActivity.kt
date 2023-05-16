@@ -1,5 +1,6 @@
 package com.example.canstudy.ui
 
+import android.app.Application
 import android.app.Dialog
 import android.content.Intent
 import android.media.MediaPlayer
@@ -21,7 +22,9 @@ import com.example.canstudy.Constants
 import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityGameBinding
 import com.example.canstudy.databinding.DialogExitGameBinding
+import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.w3c.dom.Text
@@ -53,7 +56,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
     private var countdownTimer: CountDownTimer? = null
     private var gameTimer: CountDownTimer? = null
     private var countdownTime = 3
-    private var gameTime = 60
+    private var gameTime = 15
 
     private var score = 0
     private var totalQuestions = 0
@@ -72,8 +75,6 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        val difficultySetting = intent.getStringExtra("difficultySetting")
 
         initialiseActivity()
 
@@ -189,128 +190,78 @@ class GameActivity : BaseActivity(), View.OnClickListener {
     private fun getWord() {
         val dao = (application as CanStudyApp).db.wordDao()
 
-        setDifficultyLevel()
-
-        // Log.e("mnb", "wordList is $wordList")
-
-        // Handle the case where all words have been tested
-        if (repeatedWordList.size == wordList.size) {
-            repeatedWordList.clear()
-            startActivity(Intent(this@GameActivity, ScoreActivity::class.java))
-        }
-
-        wordList.shuffle()
-
-        var wordID: Int
-        var selectedList: ArrayList<Int> = ArrayList()
-
-        // Get four random words
-        for (i in 1..4) {
-            if (i == 1) {
-                do {
-                    randomIndex = Random.nextInt(0, wordList.size)
-                    wordID = wordList[randomIndex].ID
-                } while (selectedList.contains(wordID) || repeatedWordList.contains(wordID))
-
-                tvGameEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
-                correctCantoAnswer = wordList[randomIndex].getCantoWord()
-                repeatedWordList.add(wordID)
-                tvGameWordID.text = wordID.toString()
-
-            } else {
-                do {
-                    randomIndex = Random.nextInt(0, wordList.size)
-                    wordID = wordList[randomIndex].ID
-                } while (selectedList.contains(wordID))
-
+        setDifficultyLevel(dao) {
+            // Handle the case where all words have been tested
+            if (repeatedWordList.size == wordList.size) {
+                repeatedWordList.clear()
+                startActivity(Intent(this@GameActivity, ScoreActivity::class.java))
             }
-            selectedList.add(wordID)
+
+            wordList.shuffle()
+
+            var wordID: Int
+            var selectedList: ArrayList<Int> = ArrayList()
+
+            // Get four random words
+            for (i in 1..4) {
+                if (i == 1) {
+                    do {
+                        randomIndex = Random.nextInt(0, wordList.size)
+                        wordID = wordList[randomIndex].ID
+                    } while (selectedList.contains(wordID) || repeatedWordList.contains(wordID))
+
+                    tvGameEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
+                    correctCantoAnswer = wordList[randomIndex].getCantoWord()
+                    repeatedWordList.add(wordID)
+                    tvGameWordID.text = wordID.toString()
+
+                } else {
+                    do {
+                        randomIndex = Random.nextInt(0, wordList.size)
+                        wordID = wordList[randomIndex].ID
+                    } while (selectedList.contains(wordID))
+
+                }
+                selectedList.add(wordID)
+            }
+
+            Log.e("testing", "selectedList is $selectedList")
+            Log.e("testing", "repeatedWordList is $repeatedWordList")
+
+            selectedList.shuffle()
+
+            lifecycleScope.launch {
+                btnGameOptionA.text = dao.readCantoWordById(selectedList[0]).first().getCantoWord()
+                btnGameOptionB.text = dao.readCantoWordById(selectedList[1]).first().getCantoWord()
+                btnGameOptionC.text = dao.readCantoWordById(selectedList[2]).first().getCantoWord()
+                btnGameOptionD.text = dao.readCantoWordById(selectedList[3]).first().getCantoWord()
+            }
         }
-
-        Log.e("test", "selectedList is $selectedList")
-        Log.e("test", "repeatedWordList is $repeatedWordList")
-
-        selectedList.shuffle()
-
-        lifecycleScope.launch {
-            btnGameOptionA.text = dao.readCantoWordById(selectedList[0]).first().getCantoWord()
-            btnGameOptionB.text = dao.readCantoWordById(selectedList[1]).first().getCantoWord()
-            btnGameOptionC.text = dao.readCantoWordById(selectedList[2]).first().getCantoWord()
-            btnGameOptionD.text = dao.readCantoWordById(selectedList[3]).first().getCantoWord()
-        }
-
-        /*getAllWordList(dao) { wordList ->
-    // Handle the case where all words have been chosen
-    if (repeatedWordList.size == wordList.size) {
-        repeatedWordList.clear()
-        startActivity(Intent(this@GameActivity, ScoreActivity::class.java))
     }
 
-    wordList.shuffle()
-
-    var wordID: Int
-    var selectedList: ArrayList<Int> = ArrayList()
-
-    // Get four random words
-    for (i in 1..4) {
-        if (i == 1) {
-            do {
-                randomIndex = Random.nextInt(0, wordList.size)
-                wordID = wordList[randomIndex].ID
-            } while (selectedList.contains(wordID) || repeatedWordList.contains(wordID))
-
-            tvGameEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
-            correctCantoAnswer = wordList[randomIndex].getCantoWord()
-            repeatedWordList.add(wordID)
-            tvGameWordID.text = wordID.toString()
-
-        } else {
-            do {
-                randomIndex = Random.nextInt(0, wordList.size)
-                wordID = wordList[randomIndex].ID
-            } while (selectedList.contains(wordID))
-
-        }
-        selectedList.add(wordID)
-    }
-
-    Log.e("test", "selectedList is $selectedList")
-    Log.e("test", "repeatedWordList is $repeatedWordList")
-
-    selectedList.shuffle()
-
-    lifecycleScope.launch {
-        btnGameOptionA.text = dao.readCantoWordById(selectedList[0]).first().getCantoWord()
-        btnGameOptionB.text = dao.readCantoWordById(selectedList[1]).first().getCantoWord()
-        btnGameOptionC.text = dao.readCantoWordById(selectedList[2]).first().getCantoWord()
-        btnGameOptionD.text = dao.readCantoWordById(selectedList[3]).first().getCantoWord()
-    }
-}*/
-    }
-
-    private fun setDifficultyLevel() {
-        val dao = (application as CanStudyApp).db.wordDao()
+    private fun setDifficultyLevel(dao: WordDao, callback: () -> Unit) {
         when (difficultySetting) {
             "Easy" -> {
-                Log.e("mnb", "HEELLEOO")
                 getOneWordList(dao) { list ->
                     wordList = list
-                    Log.e("mnb", "list is $list")
-                    Log.e("mnb", "WHY WON'T THIS APPEARRRR")
+                    callback()
                 }
             }
             "Medium" -> {
                 getTwoOrThreeWordList(dao) { list ->
                     wordList = list
+                    callback()
                 }
             }
             "Hard" -> {
                 getFourPlusWordList(dao) { list ->
                     wordList = list
+                    callback()
                 }
             }
             else -> {
                 Log.e("Error", "Difficulty setting not set")
+                callback()
             }
         }
     }
