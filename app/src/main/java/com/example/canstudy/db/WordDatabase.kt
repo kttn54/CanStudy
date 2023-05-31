@@ -14,7 +14,6 @@ abstract class WordDatabase: RoomDatabase() {
     abstract fun wordDao(): WordDao
 
     companion object {
-
         val migration1to2 = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
                 // Define how to migrate the database from version 1 to version 2

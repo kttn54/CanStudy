@@ -6,9 +6,8 @@ import android.os.Bundle
 import com.example.canstudy.databinding.ActivityMainBinding
 
 /**
- * A class that adds functionality to four buttons, which takes the user to different activities.
+ * A class that adds functionality to four buttons, which takes the user to their corresponding activities.
  */
-
 
 class MainActivity : AppCompatActivity() {
 

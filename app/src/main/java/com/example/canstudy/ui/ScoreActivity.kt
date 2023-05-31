@@ -9,6 +9,10 @@ import androidx.appcompat.widget.AppCompatButton
 import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityScoreBinding
 
+/**
+ * A class that displays the score from the TestActivity. The user can also opt to review the wrong words or restart the test.
+ */
+
 class ScoreActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityScoreBinding
@@ -41,6 +45,9 @@ class ScoreActivity : AppCompatActivity() {
         }
     }
 
+    /**
+     * A function that initialises the UI components.
+     */
     private fun initialiseActivity() {
         btnScoreHome = binding.btnScoreHome
         btnScoreReview = binding.btnScoreReview
@@ -64,6 +71,9 @@ class ScoreActivity : AppCompatActivity() {
         tvResultRightScore.text = totalQuestions.toString()
     }
 
+    /**
+     * A function that takes the user back to the Main Activity.
+     */
     override fun onBackPressed() {
         startActivity(Intent(this, MainActivity::class.java))
     }

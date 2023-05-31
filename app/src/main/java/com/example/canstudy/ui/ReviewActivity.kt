@@ -130,6 +130,9 @@ class ReviewActivity : AppCompatActivity() {
         itemTouchHelper.attachToRecyclerView(rvReview)
     }
 
+    /**
+     * A function that attaches the relevant data to the adapter for the RecyclerView.
+     */
     private fun attachAdapter(list: ArrayList<WordEntity>, toggleTranslation: String) {
         val reviewAdapter = ReviewAdapter(list, toggleTranslation)
         rvReview.adapter = reviewAdapter

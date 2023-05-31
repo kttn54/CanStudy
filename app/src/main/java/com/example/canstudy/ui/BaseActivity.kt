@@ -46,12 +46,9 @@ open class BaseActivity : AppCompatActivity() {
 
     fun getOneWordList(wordDao: WordDao, callback: (ArrayList<WordEntity>) -> Unit) {
         val wordList = ArrayList<WordEntity>()
-        Log.e("mnb", "Stage1")
         lifecycleScope.launch {
             wordDao.readWordByLengthOneWord().collect { allWordsList ->
-                Log.e("mnb", "Stage2")
                 if (allWordsList.isNotEmpty()) {
-                    Log.e("mnb", "Stage3")
                     for (word in allWordsList) {
                         val newWord = WordEntity(
                             word.ID,

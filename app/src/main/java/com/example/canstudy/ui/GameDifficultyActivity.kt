@@ -12,6 +12,10 @@ import com.example.canstudy.Constants
 import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityGameDifficultyBinding
 
+/**
+ * A class that sets the game difficulty and game time.
+ */
+
 class GameDifficultyActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var binding: ActivityGameDifficultyBinding
@@ -67,6 +71,9 @@ class GameDifficultyActivity : AppCompatActivity(), View.OnClickListener {
         binding.toolbarGame.setNavigationOnClickListener { onBackPressed() }
     }
 
+    /**
+     * A function that allocates the game difficulty and time depending on which button is pressed.
+     */
     override fun onClick(view: View?) {
         var button = view as Button
         var difficultySetting = "Easy"
@@ -107,6 +114,9 @@ class GameDifficultyActivity : AppCompatActivity(), View.OnClickListener {
         }
     }
 
+    /**
+     * A function that takes the user back to the Game Time buttons if they are shown the Difficulty buttons, else go back to the previous activity.
+     */
     override fun onBackPressed() {
         if (llDifficultyButtons.visibility == View.VISIBLE) {
             tvDifficultySetting.visibility = View.GONE
