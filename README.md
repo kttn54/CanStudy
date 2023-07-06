@@ -1,6 +1,6 @@
 # CanStudy
 
-CanStudy is an Android application that helps users learn and memorize Cantonese words. It utilizes a flashcard system and provides translations between Cantonese and English. The app is built with Kotlin and leverages several modern Android development best practices and libraries such as Room for local data persistence and Coroutines for handling asynchronous tasks.
+CanStudy is an Android application that helps users learn and memorize Cantonese words. It utilises a flashcard system and provides translations between Cantonese and English. The app is built with Kotlin and leverages several modern Android development best practices and libraries such as Room for local data persistence and Coroutines for handling asynchronous tasks.
 
 ![canstudy_home](https://github.com/stporg/CanStudy/assets/127300104/12f2f577-6d92-4803-b25c-c4587c5d3c0a)
 ![canstudy_search](https://github.com/stporg/CanStudy/assets/127300104/427b8bfe-ca78-4bcc-a865-d05730cead5b)
