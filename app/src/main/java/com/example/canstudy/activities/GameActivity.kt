@@ -11,7 +11,7 @@ import android.widget.ProgressBar
 import androidx.lifecycle.lifecycleScope
 import com.example.canstudy.databinding.ActivityGameBinding
 import com.example.canstudy.databinding.DialogExitGameBinding
-import com.example.canstudy.db.CanStudyApp
+import com.example.canstudy.CanStudyApp
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
 import kotlinx.coroutines.flow.firstOrNull

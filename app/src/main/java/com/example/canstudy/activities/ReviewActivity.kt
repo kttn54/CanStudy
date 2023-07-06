@@ -9,8 +9,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.canstudy.CanStudyApp
 import com.example.canstudy.R
+import com.example.canstudy.SwipeToDeleteCallback
 import com.example.canstudy.databinding.ActivityReviewBinding
-import com.example.canstudy.db.SwipeToDeleteCallback
 import com.example.canstudy.db.adapter.ReviewAdapter
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
