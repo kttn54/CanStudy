@@ -3,8 +3,7 @@ package com.example.canstudy.activities
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
+import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityScoreBinding
 
 /**
@@ -14,12 +13,6 @@ import com.example.canstudy.databinding.ActivityScoreBinding
 class ScoreActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityScoreBinding
-
-    private lateinit var btnScoreHome: AppCompatButton
-    private lateinit var btnScoreReview: AppCompatButton
-    private lateinit var btnScoreRestart: AppCompatButton
-    private lateinit var tvResultLeftScore: TextView
-    private lateinit var tvResultRightScore: TextView
     private lateinit var wrongWordList: ArrayList<Int>
     private var score: Int = 0
     private var totalQuestions: Int = 0
@@ -29,15 +22,20 @@ class ScoreActivity : AppCompatActivity() {
         binding = ActivityScoreBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initialiseActivity()
+        // Restore the values of the following if the activity is destroyed unexpectedly.
+        savedInstanceState?.let {
+            wrongWordList = it.getIntegerArrayList("wrongWordList") as ArrayList<Int>
+            score = it.getInt("score")
+            totalQuestions = it.getInt("totalQuestions")
+        } ?: initialiseActivity()
 
-        btnScoreHome.setOnClickListener { startActivity(Intent(this@ScoreActivity, MainActivity::class.java)) }
-        btnScoreReview.setOnClickListener {
+        binding.btnScoreHome.setOnClickListener { startActivity(Intent(this@ScoreActivity, MainActivity::class.java)) }
+        binding.btnScoreReview.setOnClickListener {
             val intent = Intent(this@ScoreActivity, ReviewActivity::class.java)
             intent.putIntegerArrayListExtra("wrongWordList", wrongWordList)
             startActivity(intent)
         }
-        btnScoreRestart.setOnClickListener {
+        binding.btnScoreRestart.setOnClickListener {
             val intent = Intent(this@ScoreActivity, GameDifficultyActivity::class.java)
             startActivity(intent)
         }
@@ -47,16 +45,10 @@ class ScoreActivity : AppCompatActivity() {
      * A function that initialises the UI components.
      */
     private fun initialiseActivity() {
-        btnScoreHome = binding.btnScoreHome
-        btnScoreReview = binding.btnScoreReview
-        btnScoreRestart = binding.btnScoreRestart
-        tvResultLeftScore = binding.tvResultLeftScore
-        tvResultRightScore = binding.tvResultRightScore
-
         setSupportActionBar(binding.toolbarScore)
-        if(supportActionBar != null) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.title = "Game"
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = getString(R.string.game_toolbar_title)
         }
         binding.toolbarScore.setNavigationOnClickListener { onBackPressed() }
 
@@ -65,14 +57,25 @@ class ScoreActivity : AppCompatActivity() {
         score = intent.getIntExtra("score", 0)
         totalQuestions = intent.getIntExtra("totalQuestions", 0)
 
-        tvResultLeftScore.text = score.toString()
-        tvResultRightScore.text = totalQuestions.toString()
+        binding.tvResultLeftScore.text = score.toString()
+        binding.tvResultRightScore.text = totalQuestions.toString()
     }
 
     /**
-     * A function that takes the user back to the Main Activity.
+     * A function that takes the user back to the Main Activity. The activity stack is cleared
+     * to prevent multiple instances of MainActivity.
      */
     override fun onBackPressed() {
-        startActivity(Intent(this, MainActivity::class.java))
+        Intent(this, MainActivity::class.java).also {
+            it.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+            startActivity(it)
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putIntegerArrayList("wrongWordList", wrongWordList)
+        outState.putInt("score", score)
+        outState.putInt("totalQuestions", totalQuestions)
     }
 }

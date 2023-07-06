@@ -6,9 +6,6 @@ import android.os.Bundle
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.TextView
 import com.example.canstudy.CanStudyApp
 import com.example.canstudy.databinding.ActivityTestBinding
 import com.example.canstudy.databinding.DialogRestartReviewBinding
@@ -21,18 +18,6 @@ import kotlin.random.Random
 class TestActivity : BaseActivity() {
 
     private lateinit var binding: ActivityTestBinding
-    private lateinit var ibTick: ImageButton
-    private lateinit var ibCross: ImageButton
-    private lateinit var btnCheck: Button
-    private lateinit var btnReview: Button
-    private lateinit var btnRestart: Button
-    private lateinit var tvCantoneseDescription: TextView
-    private lateinit var tvCantoneseTranslation: TextView
-    private lateinit var tvEnglishDescription: TextView
-    private lateinit var tvEnglishTranslation: TextView
-    private lateinit var tvTestWordID: TextView
-    private lateinit var tvLeftScore: TextView
-    private lateinit var tvRightScore: TextView
     private var correctScore = 0
     private var totalScore = 0
     private var repeatedWords = ArrayList<Int>()
@@ -46,11 +31,13 @@ class TestActivity : BaseActivity() {
 
         initialiseActivity()
 
-        ibTick.setOnClickListener { calculateCorrectAnswer() }
-        ibCross.setOnClickListener { calculateWrongAnswer() }
-        btnCheck.setOnClickListener { displayCantoneseText() }
-        btnRestart.setOnClickListener { restartScore() }
-        btnReview.setOnClickListener { goToReviewActivity() }
+        binding.apply {
+            ibTick.setOnClickListener { calculateCorrectAnswer() }
+            ibCross.setOnClickListener { calculateWrongAnswer() }
+            btnCheck.setOnClickListener { displayCantoneseText() }
+            btnRestart.setOnClickListener { restartScore() }
+            btnReview.setOnClickListener { goToReviewActivity() }
+        }
     }
 
     /**
@@ -58,27 +45,14 @@ class TestActivity : BaseActivity() {
      */
     private fun initialiseActivity() {
         setSupportActionBar(binding?.toolbarTestActivity)
-        if (supportActionBar != null) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.title = "Test"
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = "Test"
         }
         binding.toolbarTestActivity?.setNavigationOnClickListener { onBackPressed() }
 
-        ibTick = binding.ibTick
-        ibCross = binding.ibCross
-        btnCheck = binding.btnCheck
-        btnReview = binding.btnReview
-        btnRestart = binding.btnRestart
-        tvCantoneseDescription = binding.tvTestCantoneseDescription
-        tvCantoneseTranslation = binding.tvTestCantoneseTranslation
-        tvEnglishDescription = binding.tvTestEnglishDescription
-        tvEnglishTranslation = binding.tvTestEnglishTranslation
-        tvTestWordID = binding.tvTestWordID
-        tvLeftScore = binding.tvTestLeftScore
-        tvRightScore = binding.tvTestRightScore
-
-        tvCantoneseTranslation.visibility = INVISIBLE
-        tvCantoneseDescription.visibility = INVISIBLE
+        binding.tvTestCantoneseTranslation.visibility = INVISIBLE
+        binding.tvTestCantoneseDescription.visibility = INVISIBLE
 
         getWord()
     }
@@ -89,10 +63,10 @@ class TestActivity : BaseActivity() {
     private fun calculateCorrectAnswer() {
         correctScore++
         totalScore++
-        tvLeftScore.text = correctScore.toString()
-        tvRightScore.text = totalScore.toString()
-        tvCantoneseDescription.visibility = INVISIBLE
-        tvCantoneseTranslation.visibility = INVISIBLE
+        binding.tvTestLeftScore.text = correctScore.toString()
+        binding.tvTestRightScore.text = totalScore.toString()
+        binding.tvTestCantoneseDescription.visibility = INVISIBLE
+        binding.tvTestCantoneseTranslation.visibility = INVISIBLE
         getWord()
     }
 
@@ -101,11 +75,11 @@ class TestActivity : BaseActivity() {
      */
     private fun calculateWrongAnswer() {
         totalScore++
-        tvRightScore.text = totalScore.toString()
-        tvCantoneseDescription.visibility = INVISIBLE
-        tvCantoneseTranslation.visibility = INVISIBLE
+        binding.tvTestRightScore.text = totalScore.toString()
+        binding.tvTestCantoneseDescription.visibility = INVISIBLE
+        binding.tvTestCantoneseTranslation.visibility = INVISIBLE
 
-        val tvWrongWordID = tvTestWordID.text.toString()
+        val tvWrongWordID = binding.tvTestWordID.text.toString()
         val IDNumber = tvWrongWordID.toInt()
         wrongWordList.add(IDNumber)
 
@@ -116,12 +90,12 @@ class TestActivity : BaseActivity() {
      * A function that displays Cantonese text which is initially invisible.
      */
     private fun displayCantoneseText() {
-        if (tvCantoneseDescription.visibility == INVISIBLE) {
-            tvCantoneseDescription.visibility = VISIBLE
-            tvCantoneseTranslation.visibility = VISIBLE
+        if (binding.tvTestCantoneseDescription.visibility == INVISIBLE) {
+            binding.tvTestCantoneseDescription.visibility = VISIBLE
+            binding.tvTestCantoneseTranslation.visibility = VISIBLE
         } else {
-            tvCantoneseDescription.visibility = INVISIBLE
-            tvCantoneseTranslation.visibility = INVISIBLE
+            binding.tvTestCantoneseDescription.visibility = INVISIBLE
+            binding.tvTestCantoneseTranslation.visibility = INVISIBLE
         }
     }
 
@@ -142,8 +116,8 @@ class TestActivity : BaseActivity() {
         getAllWordList(dao) { wordList ->
             // Handle the case where all words have been chosen
             if (repeatedWords.size == wordList.size) {
-                tvCantoneseDescription.visibility = VISIBLE
-                tvCantoneseTranslation.visibility = VISIBLE
+                binding.tvTestCantoneseDescription.visibility = VISIBLE
+                binding.tvTestCantoneseTranslation.visibility = VISIBLE
                 addRestartReviewDialog()
                 disableElements()
                 repeatedWords.clear()
@@ -158,9 +132,9 @@ class TestActivity : BaseActivity() {
                 wordID = wordList[randomIndex].ID
             } while (repeatedWords.contains(wordID))
 
-            tvEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
-            tvCantoneseTranslation.text = wordList[randomIndex].getCantoWord()
-            tvTestWordID.text = wordID.toString()
+            binding.tvTestEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
+            binding.tvTestCantoneseTranslation.text = wordList[randomIndex].getCantoWord()
+            binding.tvTestWordID.text = wordID.toString()
             repeatedWords.add(wordID)
         }
     }
@@ -169,18 +143,22 @@ class TestActivity : BaseActivity() {
      * A function that disables certain UI elements.
      */
     private fun disableElements() {
-        ibTick.isEnabled = false
-        ibCross.isEnabled = false
-        btnCheck.isEnabled = false
+        binding.apply {
+            ibTick.isEnabled = false
+            ibCross.isEnabled = false
+            btnCheck.isEnabled = false
+        }
     }
 
     /**
      * A function that enables certain UI elements.
      */
     private fun enableElements() {
-        ibTick.isEnabled = true
-        ibCross.isEnabled = true
-        btnCheck.isEnabled = true
+        binding.apply {
+            ibTick.isEnabled = true
+            ibCross.isEnabled = true
+            btnCheck.isEnabled = true
+        }
     }
 
     /**
@@ -189,14 +167,14 @@ class TestActivity : BaseActivity() {
     private fun restartScore() {
         correctScore = 0
         totalScore = 0
-        tvLeftScore.text = correctScore.toString()
-        tvRightScore.text = totalScore.toString()
+        binding.tvTestLeftScore.text = correctScore.toString()
+        binding.tvTestRightScore.text = totalScore.toString()
         repeatedWords.clear()
         wrongWordList.clear()
         enableElements()
         getWord()
-        tvCantoneseDescription.visibility = INVISIBLE
-        tvCantoneseTranslation.visibility = INVISIBLE
+        binding.tvTestCantoneseDescription.visibility = VISIBLE
+        binding.tvTestCantoneseTranslation.visibility = VISIBLE
     }
 
     /**
@@ -234,7 +212,6 @@ class TestActivity : BaseActivity() {
      */
     override fun onDestroy() {
         super.onDestroy()
-        (application as CanStudyApp).db.close()
         repeatedWords.clear()
     }
 }

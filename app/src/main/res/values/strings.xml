@@ -46,4 +46,7 @@
     <string name="would_you_like_to_restart_or_review">Would you like to restart or review?</string>
     <string name="game_restart">RESTART</string>
     <string name="game_review">REVIEW</string>
+    <string name="game_game">Game</string>
+    <string name="game_toolbar_title">Game</string>
+    <string name="review_toolbar_title">Review</string>
 </resources>

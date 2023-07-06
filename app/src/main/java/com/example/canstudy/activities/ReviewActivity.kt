@@ -3,20 +3,21 @@ package com.example.canstudy.activities
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View.VISIBLE
-import android.widget.Button
-import android.widget.TextView
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.canstudy.CanStudyApp
+import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityReviewBinding
 import com.example.canstudy.db.SwipeToDeleteCallback
 import com.example.canstudy.db.adapter.ReviewAdapter
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 /**
  * A class that displays wrong words from the TestActivity for the user to review.
@@ -25,12 +26,8 @@ import kotlinx.coroutines.launch
 class ReviewActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityReviewBinding
-    private lateinit var tvNoWrongWordsFound: TextView
-    private lateinit var btnToggleVisibility: Button
-    private lateinit var btnShuffle: Button
     private lateinit var toggleTranslation: String
     private lateinit var wrongWordList: ArrayList<Int>
-    private lateinit var rvReview: RecyclerView
     private lateinit var dao: WordDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,8 +37,8 @@ class ReviewActivity : AppCompatActivity() {
 
         initialiseActivity()
 
-        btnToggleVisibility.setOnClickListener { toggleTranslation(toggleTranslation, dao, wrongWordList) }
-        btnShuffle.setOnClickListener { shuffleWordList(wrongWordList) }
+        binding.btnToggleVisibility.setOnClickListener { toggleTranslation(toggleTranslation, dao, wrongWordList) }
+        binding.btnShuffle.setOnClickListener { shuffleWordList(wrongWordList) }
     }
 
     /**
@@ -49,28 +46,23 @@ class ReviewActivity : AppCompatActivity() {
      */
     private fun initialiseActivity() {
         setSupportActionBar(binding.toolbarReviewActivity)
-        if (supportActionBar != null) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.title = "Review"
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = getString(R.string.review_toolbar_title)
         }
         binding.toolbarReviewActivity.setNavigationOnClickListener { onBackPressed() }
-
-        tvNoWrongWordsFound = binding.tvNoWrongWordsFound
-        btnToggleVisibility = binding.btnToggleVisibility
-        btnShuffle = binding.btnShuffle
-        rvReview = binding.rvReview
 
         toggleTranslation = "off"
 
         val intent = intent
-        wrongWordList = intent.getIntegerArrayListExtra("wrongWordList") as? ArrayList<Int> ?: ArrayList()
+        wrongWordList = intent.getIntegerArrayListExtra("wrongWordList") ?: arrayListOf()
 
         dao = (application as CanStudyApp).db.wordDao()
 
-        if (!wrongWordList.isNullOrEmpty()) {
+        if (wrongWordList.isNotEmpty()) {
             setupWordRecyclerView(dao, wrongWordList, toggleTranslation)
         } else {
-            tvNoWrongWordsFound.visibility = VISIBLE
+            binding.tvNoWrongWordsFound.visibility = VISIBLE
         }
     }
 
@@ -103,15 +95,20 @@ class ReviewActivity : AppCompatActivity() {
     private fun setupWordRecyclerView(wordDao: WordDao, wrongWordIDList: ArrayList<Int>, toggleTranslation: String) {
         val wrongWordIDList = wrongWordIDList
         val wrongWordEntityList = ArrayList<WordEntity>()
-        lifecycleScope.launch {
+        lifecycleScope.launch(Dispatchers.IO) {
             binding.rvReview.layoutManager = LinearLayoutManager(this@ReviewActivity)
-            // first() collects the first result from the query. This converts the query from a
-            // Flow<WordEntity> to a WordEntity type.
+            // first() collects the first result from the query. This converts the query from a Flow<WordEntity> to a WordEntity type.
+
+            // Database operation
             for (id in wrongWordIDList) {
                 val newWord = wordDao.readWordById(id).first()
                 wrongWordEntityList.add(newWord)
             }
-            attachAdapter(wrongWordEntityList, toggleTranslation)
+
+            // Swich back to the main dispatcher to update UI
+            withContext(Dispatchers.Main) {
+                attachAdapter(wrongWordEntityList, toggleTranslation)
+            }
         }
 
         val swipeHandler = object : SwipeToDeleteCallback() {
@@ -119,12 +116,12 @@ class ReviewActivity : AppCompatActivity() {
                 val position = viewHolder.adapterPosition
                 wrongWordEntityList.removeAt(position)
                 wrongWordList.removeAt(position)
-                rvReview.adapter?.notifyItemRemoved(position)
+                binding.rvReview.adapter?.notifyItemRemoved(position)
             }
         }
 
         val itemTouchHelper = ItemTouchHelper(swipeHandler)
-        itemTouchHelper.attachToRecyclerView(rvReview)
+        itemTouchHelper.attachToRecyclerView(binding.rvReview)
     }
 
     /**
@@ -132,6 +129,6 @@ class ReviewActivity : AppCompatActivity() {
      */
     private fun attachAdapter(list: ArrayList<WordEntity>, toggleTranslation: String) {
         val reviewAdapter = ReviewAdapter(list, toggleTranslation)
-        rvReview.adapter = reviewAdapter
+        binding.rvReview.adapter = reviewAdapter
     }
 }

@@ -1,4 +1,4 @@
-package com.example.canstudy.db
+package com.example.canstudy
 
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView

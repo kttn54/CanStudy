@@ -7,9 +7,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.WindowManager
-import android.widget.Button
-import android.widget.EditText
-import android.widget.TextView
 import android.widget.Toast
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -20,7 +17,6 @@ import com.example.canstudy.databinding.DialogAddWordBinding
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import kotlin.collections.ArrayList
@@ -32,10 +28,7 @@ import kotlin.collections.ArrayList
 class SearchActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivitySearchBinding
-    private lateinit var searchBar: EditText
-    private lateinit var noSearchResults: TextView
     private lateinit var languageSelected: String
-    private lateinit var btnAdd: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +39,7 @@ class SearchActivity : AppCompatActivity() {
 
         val dao = (application as CanStudyApp).db.wordDao()
 
-        btnAdd.setOnClickListener {
+        binding.btnAddWord.setOnClickListener {
             addWordDialog(dao)
         }
     }
@@ -56,24 +49,21 @@ class SearchActivity : AppCompatActivity() {
      */
     private fun initialiseActivity() {
         setSupportActionBar(binding.toolbarSearchActivity)
-        if (supportActionBar != null) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.title = "Search word/phrase"
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = "Search word/phrase"
         }
         binding.toolbarSearchActivity?.setNavigationOnClickListener { onBackPressed() }
 
         val dao = (application as CanStudyApp).db.wordDao()
 
-        noSearchResults = binding.tvNoResultsFound
-        searchBar = binding.etSearchBar
-        btnAdd = binding.btnAddWord
         languageSelected = "English"
 
-        searchBar.requestFocus()
+        binding.etSearchBar.requestFocus()
 
         setupRadioGroupListener()
         setupWordRecyclerView(dao)
-        setupEnglishSearchListener()
+        setupSearchListener()
     }
 
     /**
@@ -132,36 +122,20 @@ class SearchActivity : AppCompatActivity() {
         binding.rgLanguage.setOnCheckedChangeListener { _, checkedId: Int ->
             if (checkedId == binding.rbEnglish.id) {
                 binding.etSearchBar.setText("")
-                setupEnglishSearchListener()
+                setupSearchListener()
             } else {
                 binding.etSearchBar.setText("")
                 languageSelected = "Cantonese"
-                setupCantoneseSearchListener()
+                setupSearchListener()
             }
         }
     }
 
     /**
-     * A function to search and filter the English words by the user input.
+     * A function to search and filter the English/Cantonese words by the user input.
      */
-    private fun setupEnglishSearchListener() {
-        searchBar.addTextChangedListener(object: TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
-            override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                val query = s.toString()
-                filterWithQuery(query)
-            }
-
-            override fun afterTextChanged(s: Editable?) {}
-        })
-    }
-
-    /**
-     * A function to search and filter the Cantonese words by the user input.
-     */
-    private fun setupCantoneseSearchListener() {
-        searchBar.addTextChangedListener(object: TextWatcher {
+    private fun setupSearchListener() {
+        binding.etSearchBar.addTextChangedListener(object: TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -265,14 +239,5 @@ class SearchActivity : AppCompatActivity() {
             binding.rvSearch.visibility = View.VISIBLE
             binding.tvNoResultsFound.visibility = View.INVISIBLE
         }
-    }
-
-    /**
-     * A function that calls the default behaviour as the activity is destroyed, and also
-     * closes the database connection.
-     */
-    override fun onDestroy() {
-        super.onDestroy()
-        (application as CanStudyApp).db.close()
     }
 }

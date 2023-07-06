@@ -7,17 +7,14 @@ import android.os.CountDownTimer
 import android.util.Log
 import android.view.View
 import android.widget.Button
-import android.widget.LinearLayout
 import android.widget.ProgressBar
-import android.widget.TextView
-import androidx.appcompat.widget.AppCompatButton
 import androidx.lifecycle.lifecycleScope
-import com.example.canstudy.CanStudyApp
 import com.example.canstudy.databinding.ActivityGameBinding
 import com.example.canstudy.databinding.DialogExitGameBinding
+import com.example.canstudy.db.CanStudyApp
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
-import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.firstOrNull
 import kotlinx.coroutines.launch
 import kotlin.random.Random
 
@@ -26,24 +23,9 @@ import kotlin.random.Random
  */
 
 class GameActivity : BaseActivity(), View.OnClickListener {
-
     private lateinit var binding : ActivityGameBinding
-    private lateinit var tvCountdown : TextView
-    private lateinit var tvGameTime : TextView
-    private lateinit var tvGameEnglishDescription : TextView
-    private lateinit var tvGameEnglishTranslation : TextView
-    private lateinit var tvGameWordID : TextView
-    private lateinit var llOptionA: LinearLayout
-    private lateinit var llOptionB: LinearLayout
-    private lateinit var llOptionC: LinearLayout
-    private lateinit var llOptionD: LinearLayout
-    private lateinit var btnGameOptionA: AppCompatButton
-    private lateinit var btnGameOptionB: AppCompatButton
-    private lateinit var btnGameOptionC: AppCompatButton
-    private lateinit var btnGameOptionD: AppCompatButton
 
     private var difficultySetting = "Easy"
-
     private var countdownTimer: CountDownTimer? = null
     private var gameTimer: CountDownTimer? = null
     private var countdownTime = 3
@@ -60,8 +42,6 @@ class GameActivity : BaseActivity(), View.OnClickListener {
 
     private lateinit var progressBar: ProgressBar
 
-    //private lateinit var mediaPlayer: MediaPlayer
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
@@ -69,10 +49,10 @@ class GameActivity : BaseActivity(), View.OnClickListener {
 
         initialiseActivity()
 
-        btnGameOptionA.setOnClickListener(this)
-        btnGameOptionB.setOnClickListener(this)
-        btnGameOptionC.setOnClickListener(this)
-        btnGameOptionD.setOnClickListener(this)
+        binding.btnGameOptionA.setOnClickListener(this)
+        binding.btnGameOptionB.setOnClickListener(this)
+        binding.btnGameOptionC.setOnClickListener(this)
+        binding.btnGameOptionD.setOnClickListener(this)
     }
 
     /**
@@ -80,9 +60,9 @@ class GameActivity : BaseActivity(), View.OnClickListener {
      */
     private fun initialiseActivity() {
         setSupportActionBar(binding.toolbarGame)
-        if(supportActionBar != null) {
-            supportActionBar?.setDisplayHomeAsUpEnabled(true)
-            supportActionBar?.title = "Game"
+        supportActionBar?.apply {
+            setDisplayHomeAsUpEnabled(true)
+            title = "Game"
         }
 
         binding.toolbarGame.setNavigationOnClickListener { onBackPressed() }
@@ -91,22 +71,7 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         difficultySetting = intent.getStringExtra("difficultySetting").toString()
         gameTime = intent.getIntExtra("gameTime", 0)
 
-        tvCountdown = binding.tvCountdown
-        tvGameTime = binding.tvGameTime
-        tvGameEnglishDescription = binding.tvGameEnglishDescription
-        tvGameEnglishTranslation = binding.tvGameEnglishTranslation
-        tvGameWordID = binding.tvGameWordID
-        llOptionA = binding.llOptionA
-        llOptionB = binding.llOptionB
-        llOptionC = binding.llOptionC
-        llOptionD = binding.llOptionD
-        btnGameOptionA = binding.btnGameOptionA
-        btnGameOptionB = binding.btnGameOptionB
-        btnGameOptionC = binding.btnGameOptionC
-        btnGameOptionD = binding.btnGameOptionD
-
         progressBar = binding.progressBarGame
-        //mediaPlayer = MediaPlayer.create(this@GameActivity, R.raw.yummy_dim_sum)
 
         setupGame()
     }
@@ -115,16 +80,16 @@ class GameActivity : BaseActivity(), View.OnClickListener {
      * A function that shows the countdown before the game starts.
      */
     private fun setupGame() {
-        tvCountdown.visibility = View.VISIBLE
+        binding.tvCountdown.visibility = View.VISIBLE
 
         countdownTimer = object : CountDownTimer((countdownTime * 1000).toLong(), 1000) {
             override fun onTick(p0: Long) {
-                tvCountdown.text = countdownTime.toString()
+                binding.tvCountdown.text = countdownTime.toString()
                 countdownTime--
             }
 
             override fun onFinish() {
-                tvCountdown.visibility = View.GONE
+                binding.tvCountdown.visibility = View.GONE
                 startGame()
             }
         }.start()
@@ -134,20 +99,21 @@ class GameActivity : BaseActivity(), View.OnClickListener {
      * A function that starts the game once the countdown has finished.
      */
     private fun startGame() {
-        //mediaPlayer.start()
-        binding.toolbarGame.title = "Game - $difficultySetting - $gameTime"
-        progressBar.visibility = View.VISIBLE
-        tvGameTime.visibility = View.VISIBLE
-        tvGameEnglishDescription.visibility = View.VISIBLE
-        tvGameEnglishTranslation.visibility = View.VISIBLE
-        llOptionA.visibility = View.VISIBLE
-        llOptionB.visibility = View.VISIBLE
-        llOptionC.visibility = View.VISIBLE
-        llOptionD.visibility = View.VISIBLE
-        btnGameOptionA.visibility = View.VISIBLE
-        btnGameOptionB.visibility = View.VISIBLE
-        btnGameOptionC.visibility = View.VISIBLE
-        btnGameOptionD.visibility = View.VISIBLE
+        binding.apply {
+            toolbarGame.title = "Game - $difficultySetting - $gameTime seconds"
+            progressBar.visibility = View.VISIBLE
+            tvGameTime.visibility = View.VISIBLE
+            tvGameEnglishDescription.visibility = View.VISIBLE
+            tvGameEnglishTranslation.visibility = View.VISIBLE
+            llOptionA.visibility = View.VISIBLE
+            llOptionB.visibility = View.VISIBLE
+            llOptionC.visibility = View.VISIBLE
+            llOptionD.visibility = View.VISIBLE
+            btnGameOptionA.visibility = View.VISIBLE
+            btnGameOptionB.visibility = View.VISIBLE
+            btnGameOptionC.visibility = View.VISIBLE
+            btnGameOptionD.visibility = View.VISIBLE
+        }
 
         progressBar.max = gameTime
         var currentTime = gameTime
@@ -157,18 +123,11 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         gameTimer = object : CountDownTimer((gameTime * 1000).toLong(), 1000) {
             override fun onTick(p0: Long) {
                 progressBar.progress = currentTime
-                tvGameTime.text = currentTime.toString()
+                binding.tvGameTime.text = currentTime.toString()
                 currentTime--
             }
 
             override fun onFinish() {
-                /*
-                if (mediaPlayer.isPlaying) {
-                    mediaPlayer.stop()
-                    mediaPlayer.release()
-                }
-                */
-
                 val intent = Intent(this@GameActivity, ScoreActivity::class.java)
                 intent.putIntegerArrayListExtra("wrongWordList", wrongWordList)
                 intent.putExtra("score", score)
@@ -204,10 +163,10 @@ class GameActivity : BaseActivity(), View.OnClickListener {
                         wordID = wordList[randomIndex].ID
                     } while (selectedList.contains(wordID) || repeatedWordList.contains(wordID))
 
-                    tvGameEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
+                    binding.tvGameEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
                     correctCantoAnswer = wordList[randomIndex].getCantoWord()
                     repeatedWordList.add(wordID)
-                    tvGameWordID.text = wordID.toString()
+                    binding.tvGameWordID.text = wordID.toString()
 
                 } else {
                     do {
@@ -219,16 +178,15 @@ class GameActivity : BaseActivity(), View.OnClickListener {
                 selectedList.add(wordID)
             }
 
-            Log.e("testing", "selectedList is $selectedList")
-            Log.e("testing", "repeatedWordList is $repeatedWordList")
-
             selectedList.shuffle()
 
             lifecycleScope.launch {
-                btnGameOptionA.text = dao.readCantoWordById(selectedList[0]).first().getCantoWord()
-                btnGameOptionB.text = dao.readCantoWordById(selectedList[1]).first().getCantoWord()
-                btnGameOptionC.text = dao.readCantoWordById(selectedList[2]).first().getCantoWord()
-                btnGameOptionD.text = dao.readCantoWordById(selectedList[3]).first().getCantoWord()
+                binding.apply {
+                    btnGameOptionA.text = dao.readCantoWordById(selectedList[0]).firstOrNull()?.getCantoWord()
+                    btnGameOptionB.text = dao.readCantoWordById(selectedList[1]).firstOrNull()?.getCantoWord()
+                    btnGameOptionC.text = dao.readCantoWordById(selectedList[2]).firstOrNull()?.getCantoWord()
+                    btnGameOptionD.text = dao.readCantoWordById(selectedList[3]).firstOrNull()?.getCantoWord()
+                }
             }
         }
     }
@@ -266,13 +224,13 @@ class GameActivity : BaseActivity(), View.OnClickListener {
     override fun onClick(view: View?) {
         totalQuestions++
 
-        val button = view as Button
+        val button = view as? Button ?: return
         val selectedCantoOption = button.text.toString()
 
         if (selectedCantoOption == correctCantoAnswer) {
             score++
         } else {
-            wrongWordList.add(tvGameWordID.text.toString().toInt())
+            wrongWordList.add(binding.tvGameWordID.text.toString().toInt())
         }
 
         getWord()
@@ -295,13 +253,5 @@ class GameActivity : BaseActivity(), View.OnClickListener {
             customDialog.dismiss()
         }
         customDialog.show()
-    }
-
-    /**
-     * A function that stops the media player once the activity is destroyed to avoid memory leaks.
-     */
-    override fun onDestroy() {
-        //mediaPlayer.release()
-        super.onDestroy()
     }
 }

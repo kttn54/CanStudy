@@ -14,38 +14,22 @@ abstract class WordDatabase: RoomDatabase() {
     abstract fun wordDao(): WordDao
 
     companion object {
-        val migration1to2 = object : Migration(1, 2) {
+        val migrationOnetoTwo = object : Migration(1, 2) {
             override fun migrate(database: SupportSQLiteDatabase) {
-                // Define how to migrate the database from version 1 to version 2
-                // For example, you can add a new column or modify an existing column
-                database.execSQL("ALTER TABLE WordEntity ADD COLUMN new_column_name TEXT")
+                database.execSQL("ALTER TABLE CantoWords ADD COLUMN Changes TEXT")
             }
         }
 
-        // this will keep a reference to any database returned via getInstance.
-        // this will help avoid repeatedly initialising the database which is performance heavy
+        // @Volatile will keep a reference to any database returned via getInstance, avoiding repeatedly
+        // initialising the database.
         @Volatile
         private var INSTANCE: WordDatabase? = null
 
-        /*
-        This is an example of Singleton pattern, where there is only one instance and
-        provides a global point of access to that instance.
-        Multiple instances of a database can lead to issues with concurrency and
-        cause inconsistencies with data
-        This method will check if we already have an instance already.
-        If we do, use it. Otherwise, create it.
+        /**
+         * This function is a Singleton pattern, ensuring there is only one instance of the database.
+         * It synchronises access to the database creation code to prevent concurrency issues
+         * in the case that multiple threads try to intialise the database simulatneously.
          */
-
-        /*
-        The synchronized block ensures that the database is only initialised once
-        Only one thread may enter the synchronized function at a time
-        This prevents any concurrency issues that could occur when accessing the database
-
-        The if block wipes and rebuilds the database instead of migrating if no migration object exists
-        fallbacktoDestructiveMigration ensures that the database is wiped and rebuilt
-         if no migration object exists
-         */
-
         fun getInstance(context: Context): WordDatabase {
             synchronized(this) {
                 var instance = INSTANCE
@@ -58,7 +42,7 @@ abstract class WordDatabase: RoomDatabase() {
                     )
                         .createFromAsset("database/CantoWords_v3.db")
                         .addMigrations(
-                            migration1to2)
+                            migrationOnetoTwo)
                         .build()
                     INSTANCE = instance
                 }

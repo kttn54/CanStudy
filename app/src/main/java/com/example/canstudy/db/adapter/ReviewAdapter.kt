@@ -77,7 +77,6 @@ class ReviewAdapter(private var wordList: ArrayList<WordEntity>, private var tog
 
     fun deleteItem(position: Int) {
         if (position >= 0 && position < wordList.size) {
-            Log.e("asdf", "ReviewAdapter position is $position, word removed is ${wordList[position]}")
             wordList.removeAt(position)
             notifyItemRemoved(position)
         }

@@ -1,4 +1,4 @@
-package com.example.canstudy
+package com.example.canstudy.db
 
 import android.app.Application
 import com.example.canstudy.db.WordDatabase
