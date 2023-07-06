@@ -8,10 +8,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
-    <color name="colorPrimary">#B2212121</color>
-    <color name="colorPrimaryDark">#B2212121</color>
-    <color name="colorAccent">#008F24</color>
-    <color name="lightGrey">#C4C4C4</color>
+    <color name="colorPrimary">#EDBC42</color>
+    <color name="colorPrimaryDark">#EDBC42</color>
+    <color name="colorAccent">#EDBC42</color>
+    <color name="gray">#555252</color>
 
     <color name="toolbar_color_control_normal">#000000</color>
     <color name="colorWhite">#FFFFFF</color>
@@ -22,13 +22,10 @@
     <color name="rbStateChecked">#FFFFFF</color>
     <color name="rbStateUnchecked">#ADB3BE</color>
 
-    <color name="orange">#FA8334</color>
+    <color name="orange">#EDBC42</color>
     <color name="yellow">#FFFD77</color>
     <color name="red">#D21404</color>
     <color name="green">#03C04A</color>
-    <color name="jasmine">#FFE882</color>
-    <color name="blue_munsell">#388697</color>
-    <color name="dark_purple">#271033</color>
 
-
+    <color name="dumpling_white">#F5F5F5</color>
 </resources>

@@ -1,9 +1,7 @@
-package com.example.canstudy.ui
+package com.example.canstudy.activities
 
-import android.graphics.Canvas
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View.VISIBLE
 import android.widget.Button
 import android.widget.TextView
@@ -17,7 +15,6 @@ import com.example.canstudy.db.SwipeToDeleteCallback
 import com.example.canstudy.db.adapter.ReviewAdapter
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 

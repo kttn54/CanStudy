@@ -40,7 +40,7 @@ class WordAdapter(private var wordList: ArrayList<WordEntity>): RecyclerView.Ada
             holder.llWordItemMain.setBackgroundColor(
                 ContextCompat.getColor(
                     holder.itemView.context,
-                    R.color.colorWhite
+                    R.color.dumpling_white
                 )
             )
         }

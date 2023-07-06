@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.TestActivity">
+    tools:context=".activities.TestActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarTestActivity"
@@ -14,7 +14,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_width="match_parent"
         android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/white"/>
+        android:background="@color/dumpling_white" />
 
     <LinearLayout
         android:id="@+id/llTopButtons"
@@ -31,8 +31,8 @@
             android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:backgroundTint="@color/yellow"
-            android:text="REVIEW"
+            android:text="@string/test_review"
+            android:background="@drawable/shape_button_rounded"
             android:layout_weight="1"/>
 
         <Button
@@ -40,25 +40,27 @@
             android:layout_margin="10dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="RESTART"
-            android:backgroundTint="@color/yellow"
+            android:text="@string/test_restart"
+            android:background="@drawable/shape_button_rounded"
             android:layout_weight="1"/>
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvTestScore"
-        app:layout_constraintTop_toBottomOf="@id/llTopButtons"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="30dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
-        android:gravity="center"
-        android:textSize="30sp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Score:"/>
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginRight="10dp"
+        android:gravity="center"
+        android:text="@string/test_score"
+        android:textSize="30sp"
+        style="@style/AppTVColourStyle"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.473"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llTopButtons" />
 
     <LinearLayout
         android:id="@+id/llTestScore"
@@ -76,6 +78,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:text="0"
+            style="@style/AppTVColourStyle"
             android:textSize="30sp"/>
 
         <TextView
@@ -84,6 +87,7 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:text="/"
+            style="@style/AppTVColourStyle"
             android:textSize="30sp"/>
 
         <TextView
@@ -92,22 +96,24 @@
             android:layout_height="match_parent"
             android:layout_margin="10dp"
             android:text="0"
+            style="@style/AppTVColourStyle"
             android:textSize="30sp"/>
 
     </LinearLayout>
 
     <TextView
         android:id="@+id/tvTestEnglishDescription"
-        app:layout_constraintTop_toBottomOf="@id/llTestScore"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/llTestScore"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
         android:layout_marginLeft="20dp"
+        android:layout_marginTop="40dp"
         android:layout_marginRight="20dp"
+        android:text="@string/test_translate_the_following_to_canto"
         android:textSize="20sp"
-        android:text="Translate the following to Canto:"/>
+        style="@style/AppTVColourStyle"
+        android:textStyle="bold"/>
 
     <TextView
         android:id="@+id/tvTestEnglishTranslation"
@@ -119,7 +125,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:textColor="@color/black"
+        style="@style/AppTVColourStyle"
         android:textSize="20sp"
         tools:text="Hello"/>
 
@@ -133,7 +139,9 @@
         android:layout_marginLeft="20dp"
         android:layout_marginTop="20dp"
         android:layout_marginRight="20dp"
-        android:text="Cantonese:"
+        android:text="@string/test_cantonese"
+        style="@style/AppTVColourStyle"
+        android:textStyle="bold"
         android:textSize="20sp"/>
 
     <TextView
@@ -146,7 +154,7 @@
         android:layout_marginTop="10dp"
         android:layout_marginLeft="20dp"
         android:layout_marginRight="20dp"
-        android:textColor="@color/black"
+        style="@style/AppTVColourStyle"
         android:textSize="20sp"
         tools:text="Lei5 hou2"/>
 
@@ -166,7 +174,7 @@
             android:layout_height="80dp"
             android:layout_marginLeft="100dp"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@null"
             android:scaleType="fitCenter"
             android:src="@drawable/greentick2"/>
 
@@ -177,7 +185,7 @@
             android:layout_marginLeft="100dp"
             android:layout_marginRight="100dp"
             android:layout_weight="1"
-            android:background="@color/white"
+            android:background="@null"
             android:scaleType="fitCenter"
             android:src="@drawable/redcross2"/>
 
@@ -192,8 +200,8 @@
         android:layout_width="150dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:backgroundTint="@color/yellow"
-        android:text="Check"/>
+        android:background="@drawable/shape_button_rounded"
+        android:text="@string/test_check"/>
 
     <TextView
         android:id="@+id/tvTestWordID"

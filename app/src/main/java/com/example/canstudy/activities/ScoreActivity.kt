@@ -1,12 +1,10 @@
-package com.example.canstudy.ui
+package com.example.canstudy.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
-import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityScoreBinding
 
 /**

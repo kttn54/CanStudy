@@ -5,16 +5,16 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.ReviewActivity">
+    tools:context=".activities.ReviewActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarReviewActivity"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:background="@color/dumpling_white"
         android:layout_width="match_parent"
-        android:layout_height="?android:attr/actionBarSize"
-        android:background="@color/white"/>
+        android:layout_height="?android:attr/actionBarSize" />
 
     <LinearLayout
         android:id="@+id/llReviewButtons"
@@ -32,7 +32,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="11sp"
-            android:text="TOGGLE VISIBILITY"
+            android:text="@string/review_toggle_visibility"
+            android:background="@drawable/shape_button_rounded"
             android:layout_weight="1"/>
 
         <Button
@@ -41,7 +42,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:textSize="11sp"
-            android:text="SHUFFLE"
+            android:text="@string/review_shuffle"
+            android:background="@drawable/shape_button_rounded"
             android:layout_weight="1"/>
 
     </LinearLayout>
@@ -71,6 +73,7 @@
         android:gravity="center"
         android:visibility="invisible"
         android:textSize="20sp"
-        android:text="Test yourself first and get something wrong you smart cookie!"/>
+        style="@style/AppTVColourStyle"
+        android:text="@string/no_wrong_words_found"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

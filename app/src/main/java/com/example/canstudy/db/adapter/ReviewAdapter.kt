@@ -65,7 +65,7 @@ class ReviewAdapter(private var wordList: ArrayList<WordEntity>, private var tog
             holder.llWordItemMain.setBackgroundColor(
                 ContextCompat.getColor(
                     holder.itemView.context,
-                    R.color.colorWhite
+                    R.color.dumpling_white
                 )
             )
         }

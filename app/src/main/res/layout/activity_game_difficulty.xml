@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".ui.GameDifficultyActivity">
+    tools:context=".activities.GameDifficultyActivity">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbarGame"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="200dp"
             android:gravity="center"
-            android:text="Select a difficulty: "
+            android:text="@string/select_a_difficulty"
             android:textColor="@color/black"
             android:textSize="30sp"
             android:visibility="gone"
@@ -55,7 +55,8 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/yellow"
-                android:text="Easy" />
+                android:background="@drawable/shape_game_button_rounded"
+                android:text="@string/difficulty_easy" />
 
             <Button
                 android:id="@+id/btnMediumDifficulty"
@@ -64,7 +65,8 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/orange"
-                android:text="Med" />
+                android:background="@drawable/shape_game_button_rounded"
+                android:text="@string/difficulty_med" />
 
             <Button
                 android:id="@+id/btnHardDifficulty"
@@ -73,7 +75,8 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/red"
-                android:text="Hard" />
+                android:background="@drawable/shape_game_button_rounded"
+                android:text="@string/difficulty_hard" />
         </LinearLayout>
     </LinearLayout>
 
@@ -92,8 +95,8 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="200dp"
             android:gravity="center"
-            android:text="Select the game time: "
-            android:textColor="@color/black"
+            android:text="@string/select_the_game_time"
+            style="@style/AppTVColourStyle"
             android:textSize="30sp"
             />
 
@@ -114,7 +117,8 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/yellow"
-                android:text="15 seconds" />
+                android:background="@drawable/shape_game_button_rounded"
+                android:text="@string/game_time_15_seconds" />
 
             <Button
                 android:id="@+id/btnThirtySeconds"
@@ -123,7 +127,8 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/orange"
-                android:text="30 seconds" />
+                android:background="@drawable/shape_game_button_rounded"
+                android:text="@string/game_time_30_seconds" />
 
             <Button
                 android:id="@+id/btnSixtySeconds"
@@ -132,7 +137,8 @@
                 android:layout_margin="5dp"
                 android:layout_weight="1"
                 android:backgroundTint="@color/red"
-                android:text="60 seconds" />
+                android:background="@drawable/shape_game_button_rounded"
+                android:text="@string/game_time_60_seconds" />
         </LinearLayout>
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

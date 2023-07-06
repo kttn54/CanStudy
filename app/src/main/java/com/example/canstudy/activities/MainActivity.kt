@@ -1,4 +1,4 @@
-package com.example.canstudy.ui
+package com.example.canstudy.activities
 
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
@@ -26,11 +26,6 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnSearch.setOnClickListener {
             val intent = Intent(this@MainActivity, SearchActivity::class.java)
-            startActivity(intent)
-        }
-
-        binding.btnStudy.setOnClickListener {
-            val intent = Intent(this@MainActivity, TestActivity::class.java)
             startActivity(intent)
         }
 

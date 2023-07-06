@@ -1,13 +1,9 @@
-package com.example.canstudy.ui
+package com.example.canstudy.activities
 
-import android.app.Application
 import android.app.Dialog
 import android.content.Intent
-import android.media.MediaPlayer
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.CountDownTimer
-import android.provider.MediaStore
 import android.util.Log
 import android.view.View
 import android.widget.Button
@@ -15,19 +11,14 @@ import android.widget.LinearLayout
 import android.widget.ProgressBar
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatButton
-import androidx.core.content.ContextCompat.startActivity
 import androidx.lifecycle.lifecycleScope
 import com.example.canstudy.CanStudyApp
-import com.example.canstudy.Constants
-import com.example.canstudy.R
 import com.example.canstudy.databinding.ActivityGameBinding
 import com.example.canstudy.databinding.DialogExitGameBinding
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 import kotlin.random.Random
 
 /**

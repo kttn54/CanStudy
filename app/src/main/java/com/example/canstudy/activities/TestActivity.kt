@@ -1,24 +1,17 @@
-package com.example.canstudy.ui
+package com.example.canstudy.activities
 
 import android.app.Dialog
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View.INVISIBLE
 import android.view.View.VISIBLE
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import androidx.lifecycle.lifecycleScope
 import com.example.canstudy.CanStudyApp
 import com.example.canstudy.databinding.ActivityTestBinding
 import com.example.canstudy.databinding.DialogRestartReviewBinding
-import com.example.canstudy.db.dao.WordDao
-import com.example.canstudy.db.entity.WordEntity
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.launch
 import kotlin.random.Random
 
 /**

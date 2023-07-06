@@ -1,4 +1,4 @@
-package com.example.canstudy.ui
+package com.example.canstudy.activities
 
 import android.app.Dialog
 import androidx.appcompat.app.AppCompatActivity

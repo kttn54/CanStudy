@@ -11,46 +11,46 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
-        android:text="Add phrase/word"
+        android:text="@string/add_phrase_word"
         android:textSize="18sp"
         android:textStyle="bold"
         android:textColor="@color/black"/>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilAddEnglishWord"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxStrokeColor="@color/colorAccent"
-        app:hintTextColor="@color/colorAccent"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <EditText
             android:id="@+id/etAddEnglishWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:hint="English..."
             android:inputType="textCapSentences"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+    </RelativeLayout>
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilAddCantoneseWord"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:boxStrokeColor="@color/colorAccent"
-        app:hintTextColor="@color/colorAccent"
-        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox">
+        android:background="@drawable/edit_text_background"
+        android:layout_marginTop="10dp"
+        android:padding="10dp">
 
-        <androidx.appcompat.widget.AppCompatEditText
+        <EditText
             android:id="@+id/etAddCantoneseWord"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
             android:hint="Cantonese..."
             android:inputType="textCapSentences"
-            android:textSize="15sp"/>
+            android:textSize="15sp" />
 
-    </com.google.android.material.textfield.TextInputLayout>
+    </RelativeLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -64,7 +64,7 @@
             android:layout_height="40dp"
             android:layout_marginEnd="10dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@color/orange"
             android:text="YES"
             android:textColor="#FFFFFF"
             android:textSize="16sp"/>
@@ -74,7 +74,7 @@
             android:layout_width="0dp"
             android:layout_height="40dp"
             android:layout_weight="1"
-            android:backgroundTint="@color/colorAccent"
+            android:backgroundTint="@color/orange"
             android:text="NO"
             android:textColor="#FFFFFF"
             android:textSize="16sp"/>

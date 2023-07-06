@@ -1,13 +1,11 @@
-package com.example.canstudy.ui
+package com.example.canstudy.activities
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.lifecycle.lifecycleScope
 import com.example.canstudy.R
 import com.example.canstudy.db.dao.WordDao
 import com.example.canstudy.db.entity.WordEntity
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
