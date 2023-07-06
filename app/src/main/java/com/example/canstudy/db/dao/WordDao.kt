@@ -45,7 +45,4 @@ interface WordDao {
 
     @Query("SELECT * FROM `CantoWords` where NUMBER_OF_WORDS > 3")
     fun readWordByLengthFourPlusWords(): Flow<List<WordEntity>>
-
-    /*@Query("SELECT * FROM `CantoWords` where id=:id")
-    fun readWordById(id:Int):Flow<WordEntity>*/
 }
