@@ -2,6 +2,7 @@ package com.example.canstudy.activities
 
 import android.app.Dialog
 import android.content.Intent
+import android.os.Build.VERSION_CODES.P
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -25,27 +26,61 @@ import kotlin.random.Random
 class GameActivity : BaseActivity(), View.OnClickListener {
     private lateinit var binding : ActivityGameBinding
 
-    private var difficultySetting = "Easy"
+    private var difficultySetting = ""
     private var countdownTimer: CountDownTimer? = null
     private var gameTimer: CountDownTimer? = null
     private var countdownTime = 3
-    private var gameTime = 60
-
+    private var gameTime = 0
     private var score = 0
     private var totalQuestions = 0
-
     private var wordList: ArrayList<WordEntity> = arrayListOf()
     private var repeatedWordList = ArrayList<Int>()
     private var wrongWordList = ArrayList<Int>()
+    private var selectedList: ArrayList<Int> = ArrayList()
     private var randomIndex: Int = Random.nextInt()
-    private var correctCantoAnswer: String = "initialised"
+    private var englishWord = ""
+    private var correctCantoAnswer = ""
+    private var isResumed = false
+    private var timeLeftOnTimer = 0
+    private var wordId = 0
 
     private lateinit var progressBar: ProgressBar
+
+    companion object {
+        private val CORRECT_SCORE = "CORRECT_SCORE"
+        private val TOTAL_QUESTIONS = "TOTAL_QUESTIONS"
+        private val ENGLISH_WORD = "ENGLISH_WORD"
+        private val CORRECT_CANTO_ANSWER = "CORRECT_CANTO_ANSWER"
+        private val WORD_ID = "WORD_ID"
+        private val REPEATED_WORDS = "REPEATED_WORDS"
+        private val WRONG_WORDS = "WRONG_WORDS"
+        private val SELECTED_WORDS = "SELECTED_WORDS"
+        private val TIME_LEFT_ON_TIMER = "TIME_LEFT_ON_TIMER"
+        private val IS_RESUMED = "IS_RESUMED"
+        private val DIFFICULTY_SETTING = "DIFFICULTY_SETTING"
+        private val GAME_TIME = "GAME_TIME"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityGameBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        if (savedInstanceState != null) {
+            score = savedInstanceState.getInt(CORRECT_SCORE)
+            totalQuestions = savedInstanceState.getInt(TOTAL_QUESTIONS)
+            gameTime = savedInstanceState.getInt(GAME_TIME)
+            englishWord = savedInstanceState.getString(ENGLISH_WORD).toString()
+            wordId = savedInstanceState.getInt(WORD_ID)
+            difficultySetting = savedInstanceState.getString(DIFFICULTY_SETTING).toString()
+            binding.tvGameEnglishTranslation.text = englishWord
+            correctCantoAnswer = savedInstanceState.getString(CORRECT_CANTO_ANSWER).toString()
+            repeatedWordList = savedInstanceState.getIntegerArrayList(REPEATED_WORDS) as ArrayList<Int>
+            wrongWordList = savedInstanceState.getIntegerArrayList(WRONG_WORDS) as ArrayList<Int>
+            selectedList = savedInstanceState.getIntegerArrayList(SELECTED_WORDS) as ArrayList<Int>
+            timeLeftOnTimer = savedInstanceState.getInt(TIME_LEFT_ON_TIMER)
+            isResumed = savedInstanceState.getBoolean(IS_RESUMED)
+        }
 
         initialiseActivity()
 
@@ -53,6 +88,24 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         binding.btnGameOptionB.setOnClickListener(this)
         binding.btnGameOptionC.setOnClickListener(this)
         binding.btnGameOptionD.setOnClickListener(this)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        isResumed = true
+        outState.putInt(CORRECT_SCORE, score)
+        outState.putInt(TOTAL_QUESTIONS, totalQuestions)
+        outState.putString(ENGLISH_WORD, englishWord)
+        outState.putString(CORRECT_CANTO_ANSWER, correctCantoAnswer)
+        outState.putInt(GAME_TIME, gameTime)
+        outState.putInt(WORD_ID, wordId)
+        outState.putString(DIFFICULTY_SETTING, difficultySetting)
+        outState.putIntegerArrayList(REPEATED_WORDS, repeatedWordList)
+        outState.putIntegerArrayList(WRONG_WORDS, wrongWordList)
+        outState.putIntegerArrayList(SELECTED_WORDS, selectedList)
+        outState.putInt(TIME_LEFT_ON_TIMER, timeLeftOnTimer)
+        outState.putBoolean(IS_RESUMED, isResumed)
     }
 
     /**
@@ -66,14 +119,17 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         }
 
         binding.toolbarGame.setNavigationOnClickListener { onBackPressed() }
-
-        val intent = intent
-        difficultySetting = intent.getStringExtra("difficultySetting").toString()
-        gameTime = intent.getIntExtra("gameTime", 0)
-
         progressBar = binding.progressBarGame
 
-        setupGame()
+        if (!isResumed) {
+            val intent = intent
+            difficultySetting = intent.getStringExtra("difficultySetting").toString()
+            gameTime = intent.getIntExtra("gameTime", 0)
+
+            setupGame()
+        } else {
+            startGame()
+        }
     }
 
     /**
@@ -116,12 +172,20 @@ class GameActivity : BaseActivity(), View.OnClickListener {
         }
 
         progressBar.max = gameTime
-        var currentTime = gameTime
+        var currentTime: Int
 
-        getWord()
+        if (isResumed) {
+            currentTime = timeLeftOnTimer
+            binding.tvGameWordID.text = wordId.toString()
+            setButtonOptionText()
+        } else {
+            currentTime = gameTime
+            getWord()
+        }
 
-        gameTimer = object : CountDownTimer((gameTime * 1000).toLong(), 1000) {
+        gameTimer = object : CountDownTimer((currentTime * 1000).toLong(), 1000) {
             override fun onTick(p0: Long) {
+                timeLeftOnTimer = currentTime
                 progressBar.progress = currentTime
                 binding.tvGameTime.text = currentTime.toString()
                 currentTime--
@@ -152,41 +216,44 @@ class GameActivity : BaseActivity(), View.OnClickListener {
 
             wordList.shuffle()
 
-            var wordID: Int
-            var selectedList: ArrayList<Int> = ArrayList()
-
             // Get four random words
             for (i in 1..4) {
                 if (i == 1) {
                     do {
                         randomIndex = Random.nextInt(0, wordList.size)
-                        wordID = wordList[randomIndex].ID
-                    } while (selectedList.contains(wordID) || repeatedWordList.contains(wordID))
+                        wordId = wordList[randomIndex].ID
+                    } while (selectedList.contains(wordId) || repeatedWordList.contains(wordId))
 
-                    binding.tvGameEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
+                    englishWord = wordList[randomIndex].getEnglishWord()
+                    binding.tvGameEnglishTranslation.text = englishWord
+
                     correctCantoAnswer = wordList[randomIndex].getCantoWord()
-                    repeatedWordList.add(wordID)
-                    binding.tvGameWordID.text = wordID.toString()
+                    repeatedWordList.add(wordId)
+                    binding.tvGameWordID.text = wordId.toString()
 
                 } else {
                     do {
                         randomIndex = Random.nextInt(0, wordList.size)
-                        wordID = wordList[randomIndex].ID
-                    } while (selectedList.contains(wordID))
+                        wordId = wordList[randomIndex].ID
+                    } while (selectedList.contains(wordId))
 
                 }
-                selectedList.add(wordID)
+                selectedList.add(wordId)
             }
 
             selectedList.shuffle()
+            setButtonOptionText()
+        }
+    }
 
-            lifecycleScope.launch {
-                binding.apply {
-                    btnGameOptionA.text = dao.readCantoWordById(selectedList[0]).firstOrNull()?.getCantoWord()
-                    btnGameOptionB.text = dao.readCantoWordById(selectedList[1]).firstOrNull()?.getCantoWord()
-                    btnGameOptionC.text = dao.readCantoWordById(selectedList[2]).firstOrNull()?.getCantoWord()
-                    btnGameOptionD.text = dao.readCantoWordById(selectedList[3]).firstOrNull()?.getCantoWord()
-                }
+    private fun setButtonOptionText() {
+        val dao = (application as CanStudyApp).db.wordDao()
+        lifecycleScope.launch {
+            binding.apply {
+                btnGameOptionA.text = dao.readCantoWordById(selectedList[0]).firstOrNull()?.getCantoWord()
+                btnGameOptionB.text = dao.readCantoWordById(selectedList[1]).firstOrNull()?.getCantoWord()
+                btnGameOptionC.text = dao.readCantoWordById(selectedList[2]).firstOrNull()?.getCantoWord()
+                btnGameOptionD.text = dao.readCantoWordById(selectedList[3]).firstOrNull()?.getCantoWord()
             }
         }
     }
@@ -253,5 +320,11 @@ class GameActivity : BaseActivity(), View.OnClickListener {
             customDialog.dismiss()
         }
         customDialog.show()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        gameTimer?.cancel()
+        countdownTimer?.cancel()
     }
 }

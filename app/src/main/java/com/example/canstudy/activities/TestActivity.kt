@@ -20,16 +20,54 @@ class TestActivity : BaseActivity() {
     private lateinit var binding: ActivityTestBinding
     private var correctScore = 0
     private var totalScore = 0
-    private var repeatedWords = ArrayList<Int>()
+    private var repeatedWordList = ArrayList<Int>()
     private var wrongWordList = ArrayList<Int>()
     private var randomIndex: Int = Random.nextInt()
+    private var englishWord = ""
+    private var cantoneseWord = ""
+    private var isWordVisible = false
+
+    companion object {
+        private val CORRECT_SCORE = "CORRECT_SCORE"
+        private val TOTAL_SCORE = "TOTAL_SCORE"
+        private val ENGLISH_WORD = "ENGLISH_WORD"
+        private val CANTONESE_WORD = "CANTONESE_WORD"
+        private val IS_WORD_VISIBLE = "IS_WORD_VISIBLE"
+        private val WRONG_WORDS = "WRONG_WORDS"
+        private val REPEATED_WORDS = "REPEATED_WORDS"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityTestBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        initialiseActivity()
+        if (savedInstanceState != null) {
+            correctScore = savedInstanceState.getInt(CORRECT_SCORE)
+            binding.tvTestLeftScore.text = correctScore.toString()
+            totalScore = savedInstanceState.getInt(TOTAL_SCORE)
+            binding.tvTestRightScore.text = totalScore.toString()
+
+            englishWord = savedInstanceState.getString(ENGLISH_WORD).toString()
+            binding.tvTestEnglishTranslation.text = englishWord
+
+            cantoneseWord = savedInstanceState.getString(CANTONESE_WORD).toString()
+            binding.tvTestCantoneseTranslation.text = cantoneseWord
+
+            isWordVisible = savedInstanceState.getBoolean(IS_WORD_VISIBLE)
+            if (isWordVisible) {
+                binding.tvTestCantoneseDescription.visibility = VISIBLE
+                binding.tvTestCantoneseTranslation.visibility = VISIBLE
+            } else {
+                binding.tvTestCantoneseDescription.visibility = INVISIBLE
+                binding.tvTestCantoneseTranslation.visibility = INVISIBLE
+            }
+
+            repeatedWordList = savedInstanceState.getIntegerArrayList(REPEATED_WORDS) as ArrayList<Int>
+            wrongWordList = savedInstanceState.getIntegerArrayList(WRONG_WORDS) as ArrayList<Int>
+        } else {
+            initialiseActivity()
+        }
 
         binding.apply {
             ibTick.setOnClickListener { calculateCorrectAnswer() }
@@ -40,16 +78,28 @@ class TestActivity : BaseActivity() {
         }
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+
+        outState.putInt(CORRECT_SCORE, correctScore)
+        outState.putInt(TOTAL_SCORE, totalScore)
+        outState.putString(ENGLISH_WORD, englishWord)
+        outState.putString(CANTONESE_WORD, cantoneseWord)
+        outState.putBoolean(IS_WORD_VISIBLE, isWordVisible)
+        outState.putIntegerArrayList(REPEATED_WORDS, repeatedWordList)
+        outState.putIntegerArrayList(WRONG_WORDS, wrongWordList)
+    }
+
     /**
      * A function that initialises the word list and UI components.
      */
     private fun initialiseActivity() {
-        setSupportActionBar(binding?.toolbarTestActivity)
+        setSupportActionBar(binding.toolbarTestActivity)
         supportActionBar?.apply {
             setDisplayHomeAsUpEnabled(true)
             title = "Test"
         }
-        binding.toolbarTestActivity?.setNavigationOnClickListener { onBackPressed() }
+        binding.toolbarTestActivity.setNavigationOnClickListener { onBackPressed() }
 
         binding.tvTestCantoneseTranslation.visibility = INVISIBLE
         binding.tvTestCantoneseDescription.visibility = INVISIBLE
@@ -93,9 +143,11 @@ class TestActivity : BaseActivity() {
         if (binding.tvTestCantoneseDescription.visibility == INVISIBLE) {
             binding.tvTestCantoneseDescription.visibility = VISIBLE
             binding.tvTestCantoneseTranslation.visibility = VISIBLE
+            isWordVisible = true
         } else {
             binding.tvTestCantoneseDescription.visibility = INVISIBLE
             binding.tvTestCantoneseTranslation.visibility = INVISIBLE
+            isWordVisible = false
         }
     }
 
@@ -115,12 +167,12 @@ class TestActivity : BaseActivity() {
         val dao = (application as CanStudyApp).db.wordDao()
         getAllWordList(dao) { wordList ->
             // Handle the case where all words have been chosen
-            if (repeatedWords.size == wordList.size) {
+            if (repeatedWordList.size == wordList.size) {
                 binding.tvTestCantoneseDescription.visibility = VISIBLE
                 binding.tvTestCantoneseTranslation.visibility = VISIBLE
                 addRestartReviewDialog()
                 disableElements()
-                repeatedWords.clear()
+                repeatedWordList.clear()
                 return@getAllWordList
             }
             wordList.shuffle()
@@ -130,12 +182,16 @@ class TestActivity : BaseActivity() {
             do {
                 randomIndex = Random.nextInt(0, wordList.size)
                 wordID = wordList[randomIndex].ID
-            } while (repeatedWords.contains(wordID))
+            } while (repeatedWordList.contains(wordID))
 
-            binding.tvTestEnglishTranslation.text = wordList[randomIndex].getEnglishWord()
-            binding.tvTestCantoneseTranslation.text = wordList[randomIndex].getCantoWord()
+            englishWord = wordList[randomIndex].getEnglishWord()
+            binding.tvTestEnglishTranslation.text = englishWord
+
+            cantoneseWord = wordList[randomIndex].getCantoWord()
+            binding.tvTestCantoneseTranslation.text = cantoneseWord
+
             binding.tvTestWordID.text = wordID.toString()
-            repeatedWords.add(wordID)
+            repeatedWordList.add(wordID)
         }
     }
 
@@ -169,7 +225,7 @@ class TestActivity : BaseActivity() {
         totalScore = 0
         binding.tvTestLeftScore.text = correctScore.toString()
         binding.tvTestRightScore.text = totalScore.toString()
-        repeatedWords.clear()
+        repeatedWordList.clear()
         wrongWordList.clear()
         enableElements()
         getWord()
@@ -212,6 +268,6 @@ class TestActivity : BaseActivity() {
      */
     override fun onDestroy() {
         super.onDestroy()
-        repeatedWords.clear()
+        repeatedWordList.clear()
     }
 }
